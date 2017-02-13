@@ -38,7 +38,7 @@ public class ListNote extends Activity implements Serializable {
 	DayMonthYear dmyt;
 	DataNoteHandler dbb = new DataNoteHandler(this);
 	String tempPath= "print.xlsx";
-	String savePath=Environment.getExternalStorageDirectory().getAbsolutePath()+"/printOut.xlsx";
+	String savePath=Environment.getExternalStorageDirectory().getAbsolutePath()+"/printNote.xlsx";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
