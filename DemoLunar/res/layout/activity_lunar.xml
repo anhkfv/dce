@@ -1,0 +1,124 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:background="@drawable/bg_top" >
+
+        <ImageButton
+            android:id="@+id/ibtNote"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:padding="2dp"
+            android:src="@drawable/note" />
+
+        <TextView
+            android:id="@+id/tvMonthYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Thang 8 nam 2015"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <RelativeLayout
+            android:id="@+id/RelativeLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="0dp"
+                android:paddingBottom="0dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
+            <ImageButton
+                android:id="@+id/image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/tvTime" />
+
+            <TextView
+                android:id="@+id/tvLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:paddingTop="1dp"
+                android:text="°C"
+                android:textColor="#0000FF"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+    </android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:id="@+id/LinearLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="90dp"
+        android:background="@drawable/bg_bottom"
+        android:weightSum="10" >
+
+        <TextView
+            android:id="@+id/tvText"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3.95"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="28dp"
+            android:text="TextViewdsfdsf"
+            android:textColor="#0000FF"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/tvCir"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:background="@drawable/circle_red"
+            android:gravity="center"
+            android:text="Thu"
+            android:textColor="#0000FF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvLunar"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="28dp"
+            android:layout_weight="3.99"
+            android:gravity="center_horizontal"
+            android:text="TextView"
+            android:textColor="#0000FF"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</LinearLayout>

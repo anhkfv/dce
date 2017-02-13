@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.demolunar"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="25" />
+
+    <uses-feature android:name="android.permission.CAMERA" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" 
+                      />
+    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".GuideActivity"
+            android:label="@string/title_activity_year"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".LunarActivity"
+            android:label="@string/title_activity_day"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".TabhostActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".DetailActivity"
+            android:label="Thông tin"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".MonthActivity"
+            android:label="Lịch tháng"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".ConvertActivity"
+            android:label="Chuyển đổi ngày"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".DeatailDateActivity"
+            android:label="Thông tin chi tiết"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.example.note.NoteActivity"
+            android:label="Viết ghi chú"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.example.note.ListNote"
+            android:label="Danh sách ghi chú"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.example.weather.MainActivity"
+            android:label="Dự báo 5 ngày"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.example.weatherday.MainActivityDate"
+            android:label="Dự báo 5 ngày" >
+        </activity>
+        <activity
+            android:name="com.example.weather.InformationWeatherByDay"
+            android:label="Chi tiết"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".AlarmActivity"
+            android:label="Chi tiết"
+            android:screenOrientation="portrait" >
+        </activity>
+         <receiver android:name="com.example.alarm.AlarmReceiver" />
+
+        <service android:name="com.example.alarm.RingtonePlayingService" >
+             </service>
+    </application>
+
+</manifest>
