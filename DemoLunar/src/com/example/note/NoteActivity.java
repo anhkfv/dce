@@ -50,7 +50,7 @@ public class NoteActivity extends Activity {
 	static final int DRAG = 1;
 	static final int ZOOM = 2;
 	int mode = NONE;
-	static String PATH_IMAGE=Environment.getExternalStorageDirectory().getAbsolutePath();
+	static String PATH_IMAGE = Environment.getExternalStorageDirectory().getAbsolutePath();
 	private String path;
 
 	public String getPath() {
@@ -79,24 +79,11 @@ public class NoteActivity extends Activity {
 		if (ContextCompat.checkSelfPermission(this,
 				Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-			// Should we show an explanation?
 			if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-				// Show an expanation to the user *asynchronously* -- don't
-				// block
-				// this thread waiting for the user's response! After the user
-				// sees the explanation, try again to request the permission.
-
 			} else {
-
-				// No explanation needed, we can request the permission.
 
 				ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
 						RESULT_READ);
-
-				// MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-				// app-defined int constant. The callback method gets the
-				// result of the request.
 			}
 		}
 		AnhXa();
@@ -138,8 +125,8 @@ public class NoteActivity extends Activity {
 						cal.set(Calendar.MONTH, dmyt.getMonth() - 1);
 						cal.set(Calendar.YEAR, dmyt.getYear());
 						Date d = cal.getTime();
-						if(getPath()==null){
-							setPath(PATH_IMAGE+"/ars3.jpg");
+						if (getPath() == null) {
+							setPath(PATH_IMAGE + "/ars3.jpg");
 						}
 						db.inserta(edtTen.getText().toString(), edtGia.getText().toString(), getPath(), d);
 						Toast.makeText(NoteActivity.this, "luu thanh cong", Toast.LENGTH_LONG).show();
@@ -202,7 +189,7 @@ public class NoteActivity extends Activity {
 			Bitmap bm = decodeSampledBitmapFromUri(picturePath, 500, 500);
 			imgvHinh.setImageBitmap(bm);
 			// imageView.setOnTouchListener(new Touch());
-			
+
 			imgvHinh.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
@@ -304,7 +291,7 @@ public class NoteActivity extends Activity {
 	private void copyDataBase() {
 		try {
 			InputStream myInput = getApplicationContext().getAssets().open("ars3.jpg");
-			String outFileName = PATH_IMAGE+ "/ars3.jpg";
+			String outFileName = PATH_IMAGE + "/ars3.jpg";
 			OutputStream myOutput = new FileOutputStream(outFileName);
 			byte[] buffer = new byte[1024];
 			int length;

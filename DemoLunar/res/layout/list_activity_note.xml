@@ -38,11 +38,11 @@
 
         <ImageButton
             android:id="@+id/buttonAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:src="@drawable/add" />
+            android:background="@drawable/add" />
 
         <ImageButton
             android:id="@+id/buttonPrint"
@@ -51,7 +51,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/print" />
+            android:background="@drawable/print" />
 
     </LinearLayout>
 
