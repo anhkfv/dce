@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -35,10 +36,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -85,7 +88,11 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 			if (mangNotet.size() == 0) {
 				setBackground(dmyt);
 			} else {
-				Bitmap bmp = decodeSampledBitmapFromUri(mangNotet.get(0).imageNote, 500, 500);
+				Display display = getWindowManager().getDefaultDisplay();
+				Point size = new Point();
+				display.getSize(size);
+				Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(mangNotet.get(0).imageNote), size.x,
+						size.y, true);
 				BitmapDrawable background = new BitmapDrawable(bmp);
 				linearLayout.setBackgroundDrawable(background);
 			}
@@ -416,7 +423,12 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 		if (mangNotet.size() == 0) {
 			setBackground(dmyCurrent);
 		} else {
-			Bitmap bmp = decodeSampledBitmapFromUri(mangNotet.get(0).imageNote, 500, 500);
+			//Bitmap bmp = decodeSampledBitmapFromUri(mangNotet.get(0).imageNote, 500, 500);
+			Display display = getWindowManager().getDefaultDisplay();
+			Point size = new Point();
+			display.getSize(size);
+			Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(mangNotet.get(0).imageNote), size.x,
+					size.y, true);
 			BitmapDrawable background = new BitmapDrawable(bmp);
 			linearLayout.setBackgroundDrawable(background);
 		}
