@@ -97,6 +97,20 @@
             android:label="Chi tiết"
             android:screenOrientation="portrait" >
         </activity>
+        <activity 
+            android:name=".LoginActivity"
+            android:label="Login"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:label="Register"
+            android:screenOrientation="portrait" > 
+        </activity>
+         <activity 
+            android:name=".SyncDataServer"
+            android:screenOrientation="portrait" >
+        </activity>
          <receiver android:name="com.example.alarm.AlarmReceiver" />
 
         <service android:name="com.example.alarm.RingtonePlayingService" >

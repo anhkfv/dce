@@ -95,7 +95,7 @@ public class TabhostActivity extends TabActivity {
 				.setContent(new Intent(this, ConvertActivity.class));
 
 		this.tabspecs[3] = mHost.newTabSpec("more_tab").setIndicator("more_tab")
-				.setContent(new Intent(this, AlarmActivity.class));
+				.setContent(new Intent(this, LoginActivity.class));
 
 		for (int i = 0; i < 4; i++) {
 			mHost.addTab(this.tabspecs[i]);
