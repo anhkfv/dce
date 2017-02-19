@@ -25,7 +25,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Thang 8 nam 2015"
-            android:textColor="#FFFFFF"
+             android:textColor="#0000FF"
             android:textSize="18sp" />
 
         <RelativeLayout
@@ -45,8 +45,8 @@
                 android:paddingBottom="0dp"
                 android:paddingLeft="2dp"
                 android:paddingRight="2dp"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp" />
+                android:textColor="#0000FF"
+                android:textSize="15sp" />
 
             <ImageButton
                 android:id="@+id/image"
@@ -92,7 +92,7 @@
             android:layout_height="match_parent"
             android:layout_weight="3.95"
             android:gravity="center_horizontal"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="18dp"
             android:text="TextViewdsfdsf"
             android:textColor="#0000FF"
             android:textSize="15sp" />
@@ -113,7 +113,7 @@
             android:id="@+id/tvLunar"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="18dp"
             android:layout_weight="3.99"
             android:gravity="center_horizontal"
             android:text="TextView"

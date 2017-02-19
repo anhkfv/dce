@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/bg"
+    android:background="@drawable/nen"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -17,7 +17,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Ngày"
-            android:textColor="#ffffff" />
+            android:textColor="#0000FF" />
 
         <TextView
             android:id="@+id/textView3"
@@ -26,7 +26,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Tháng"
-            android:textColor="#ffffff" />
+            android:textColor="#0000FF" />
 
         <TextView
             android:id="@+id/textView4"
@@ -35,11 +35,11 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Năm"
-            android:textColor="#ffffff" />
+            android:textColor="#0000FF" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <EditText
@@ -92,7 +92,7 @@
             android:id="@+id/LeapN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#ffffff"
+            android:textColor="#0000FF"
             android:text="Tháng không nhuận âm"
             android:checked="true" />
 
@@ -100,7 +100,7 @@
             android:id="@+id/LeapY"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#ffffff"
+            android:textColor="#0000FF"
             android:text="Tháng nhuận âm" />
 
     </RadioGroup>
@@ -116,6 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30px"
+            android:textColor="#0000FF"
             android:text="Dương -> Âm" />
 
         <Button
@@ -123,6 +124,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30px"
+            android:textColor="#0000FF"
             android:text="Âm -> Dương" />
     </LinearLayout>
 
@@ -132,6 +134,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/rounded_edittext"
+        android:textColor="#0000FF"
         android:text="Current Date:" />
 
     <ImageButton
