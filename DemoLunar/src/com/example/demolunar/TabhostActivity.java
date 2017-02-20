@@ -92,7 +92,7 @@ public class TabhostActivity extends TabActivity {
 				.setContent(new Intent(this, MonthActivity.class));
 
 		this.tabspecs[2] = mHost.newTabSpec("message_tab").setIndicator("message_tab")
-				.setContent(new Intent(this, ConvertActivity.class));
+				.setContent(new Intent(this, ConvertDateActivity.class));
 
 		this.tabspecs[3] = mHost.newTabSpec("more_tab").setIndicator("more_tab")
 				.setContent(new Intent(this, LoginActivity.class));

@@ -5,13 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import com.example.date.DayMonthYear;
 import com.example.demolunar.R;
 import com.example.note.adapter.ListNoteAdapter;
-import com.example.print.NoteDto;
-import com.example.print.PrintNote;
 import com.example.sqlite_note.DataNoteHandler;
 
 import android.app.Activity;
@@ -116,18 +113,18 @@ public class ListNote extends Activity implements Serializable {
 			
 			@Override
 			public void onClick(View v) {
-				if(mang.size()!=0){
-                PrintNote print=new PrintNote(ListNote.this,tempPath);
-                List<NoteDto>dtos=new ArrayList<>();
-                for(Note note :mang){
-                	NoteDto dto=new NoteDto();
-                	dtos.add(dto.convert(note));
-                }
-                print.printNote(savePath, dtos);
-				}
-				else{
-					
-				}
+//				if(mang.size()!=0){
+//                PrintNote print=new PrintNote(ListNote.this,tempPath);
+//                List<NoteDto>dtos=new ArrayList<>();
+//                for(Note note :mang){
+//                	NoteDto dto=new NoteDto();
+//                	dtos.add(dto.convert(note));
+//                }
+//                print.printNote(savePath, dtos);
+//				}
+//				else{
+//					
+//				}
 			}
 		});
 	}
