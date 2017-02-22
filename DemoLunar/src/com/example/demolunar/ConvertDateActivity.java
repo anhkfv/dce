@@ -42,7 +42,8 @@ public class ConvertDateActivity extends Activity {
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				indexDay = newVal;
-				DayMonthYear dmy = new DayMonthYear( newVal+1,Integer.parseInt(month[months.getValue()]), Integer.parseInt(year[years.getValue()]));
+				DayMonthYear dmy = new DayMonthYear(newVal + 1, Integer.parseInt(month[months.getValue()]),
+						Integer.parseInt(year[years.getValue()]));
 				DayMonthYear lunar = Lunar.solar2Lunar(dmy);
 				setDatel(lunar.getMonth(), lunar.getYear(), lunar.getDay(), lunar.getLeap());
 
@@ -54,7 +55,8 @@ public class ConvertDateActivity extends Activity {
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				setDates(Integer.parseInt(month[newVal]), Integer.parseInt(year[years.getValue()]), indexDay);
-				DayMonthYear dmy = new DayMonthYear(indexDay+1,Integer.parseInt(month[newVal]), Integer.parseInt(year[years.getValue()]));
+				DayMonthYear dmy = new DayMonthYear(indexDay + 1, Integer.parseInt(month[newVal]),
+						Integer.parseInt(year[years.getValue()]));
 				DayMonthYear lunar = Lunar.solar2Lunar(dmy);
 				setDatel(lunar.getMonth(), lunar.getYear(), lunar.getDay(), lunar.getLeap());
 			}
@@ -65,20 +67,21 @@ public class ConvertDateActivity extends Activity {
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				setDates(Integer.parseInt(month[months.getValue()]), Integer.parseInt(year[newVal]), indexDay);
-				DayMonthYear dmy = new DayMonthYear(indexDay+1,Integer.parseInt(month[months.getValue()]), Integer.parseInt(year[newVal]));
+				DayMonthYear dmy = new DayMonthYear(indexDay + 1, Integer.parseInt(month[months.getValue()]),
+						Integer.parseInt(year[newVal]));
 				DayMonthYear lunar = Lunar.solar2Lunar(dmy);
 				setDatel(lunar.getMonth(), lunar.getYear(), lunar.getDay(), lunar.getLeap());
 			}
 
 		});
-		
+
 		// lunar
-		
+
 		datel.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-//				indexLunar = newVal;
+				indexLunar = newVal;
 
 			}
 
@@ -87,8 +90,11 @@ public class ConvertDateActivity extends Activity {
 
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-//				setDatel();
-//				setDates(Integer.parseInt(month[newVal]), Integer.parseInt(year[years.getValue()]), indexDay);
+				if (String.valueOf(monthLunar[newVal]).endsWith("+")) {
+					setDatel(newVal, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 1);
+				} else {
+					setDatel(newVal, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 0);
+				}
 			}
 
 		});
@@ -96,8 +102,13 @@ public class ConvertDateActivity extends Activity {
 
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-//				setDatel();
-//				setDates(Integer.parseInt(month[months.getValue()]), Integer.parseInt(year[newVal]), indexDay);
+				String temp = String.valueOf(monthl.getValue());
+				if (temp.endsWith("+")) {
+					setDatel(Integer.parseInt(temp.substring(0, temp.length() - 1)),
+							Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 1);
+				} else {
+					setDatel(monthl.getValue(), Integer.parseInt(year[newVal]), indexLunar + 1, 0);
+				}
 			}
 
 		});
@@ -167,9 +178,10 @@ public class ConvertDateActivity extends Activity {
 		yearl.setMinValue(0);
 		yearl.setMaxValue(200);
 		yearl.setDisplayedValues(year);
+		yearl.setValue(lunar.getYear() - 1900);
 		yearl.setWrapSelectorWheel(false);
-		setDatel(lunar.getMonth(), lunar.getYear(), lunar.getDay()-1, lunar.getLeap());
-	 //   indexLunar = dayt-1;
+		setDatel(lunar.getMonth(), lunar.getYear(), lunar.getDay(), lunar.getLeap());
+		indexLunar = lunar.getDay() - 1;
 
 	}
 
@@ -178,11 +190,12 @@ public class ConvertDateActivity extends Activity {
 		int day = dayt;
 		if (day >= (maxDay - 1)) {
 			day = maxDay - 1;
+			dates.setValue(day);
 			dates.setMaxValue(maxDay - 1);
 			dates.setValue(day);
 			indexDay = maxDay - 1;
 		}
-		indexLunar = day;
+		// indexLunar = day;
 		if (maxDay == 28) {
 
 			dates.setDisplayedValues(date28);
@@ -209,9 +222,9 @@ public class ConvertDateActivity extends Activity {
 
 	private void setDatel(int montht, int yeart, int dayt, int leap) {
 
-		int maxDay = maxDay(30, montht, yeart, leap);
 		Lunar ln = new Lunar();
 		int monthLeap = ln.lunarYear(yeart).length == 14 ? leap(montht, yeart) : -1;
+		int maxDay = maxDay(montht < monthLeap ? montht+1 : montht, yeart, leap);
 		// list month
 		if (monthLeap > 0) {
 			monthLunar = new String[13];
@@ -228,15 +241,21 @@ public class ConvertDateActivity extends Activity {
 			}
 			monthl.setDisplayedValues(monthLunar);
 			monthl.setMaxValue(12);
-			monthl.setValue(((montht > monthLeap) && monthLeap > -1) ? montht : (montht - 1));
+			if (leap == 1) {
+				monthl.setValue(montht);
+			} else {
+				monthl.setValue(montht);
+			}
 		} else {
+			monthLunar = new String[13];
 			monthl.setDisplayedValues(month);
 			monthl.setMaxValue(11);
-			monthl.setValue(montht - 1);
+			monthl.setValue(montht);
 		}
 
 		if (dayt >= (maxDay - 1)) {
 			dayt = maxDay - 1;
+			datel.setValue(dayt);
 			datel.setMaxValue(maxDay - 1);
 			datel.setValue(dayt);
 			indexLunar = maxDay;
@@ -253,7 +272,7 @@ public class ConvertDateActivity extends Activity {
 			// dates.setValue(day);
 		}
 		datel.setValue(dayt - 1);
-		yearl.setValue(yeart - 1900);
+		indexLunar = dayt - 1;
 
 	}
 
@@ -289,22 +308,17 @@ public class ConvertDateActivity extends Activity {
 		return -1;
 	}
 
-	private static int maxDay(int day, int month, int year, int l) {
+	private static int maxDay(int month, int year, int l) {
 		DayMonthYear dmy1;
 		DayMonthYear tempLunar = new DayMonthYear();
 		DayMonthYear tempSolar = new DayMonthYear();
-		if (day == 30) {
-			dmy1 = new DayMonthYear(day - 1, month, year, l);
-			Lunar lunar = new Lunar();
-			tempSolar = lunar.lunar2Solar(dmy1);
-			tempLunar = lunar.solar2Lunar(lunar.addDay(tempSolar, 1));
-			if (tempLunar.getDay() == 30) {
-				return 30;
-			} else {
-				return 29;
-			}
-
+		dmy1 = new DayMonthYear(29, month, year, l);
+		tempSolar = Lunar.lunar2Solar(dmy1);
+		tempLunar = Lunar.solar2Lunar(Lunar.addDay(tempSolar, 1));
+		if (tempLunar.getDay() == 30) {
+			return 30;
+		} else {
+			return 29;
 		}
-		return 29;
 	}
 }
