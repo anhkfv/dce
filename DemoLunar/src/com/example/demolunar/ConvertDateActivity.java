@@ -45,6 +45,7 @@ public class ConvertDateActivity extends Activity {
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				indexDay = newVal;
+				setDates(Integer.parseInt(month[months.getValue()]), Integer.parseInt(year[years.getValue()]), indexDay);
 				convertSolarLunar();
 
 			}
@@ -76,6 +77,12 @@ public class ConvertDateActivity extends Activity {
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				indexLunar = newVal;
+				String temp = String.valueOf(monthl.getValue());
+				if (temp.endsWith("+")) {
+					setDatel(indexMonth, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 1);
+				} else {
+					setDatel(indexMonth, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 0);
+				}
 				convertLunarSolar();
 			}
 
@@ -100,7 +107,7 @@ public class ConvertDateActivity extends Activity {
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				String temp = String.valueOf(monthl.getValue());
 				if (temp.endsWith("+")) {
-					setDatel(indexMonth, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 1);
+					setDatel(indexMonth, Integer.parseInt(year[newVal]), indexLunar + 1, 1);
 				} else {
 					setDatel(indexMonth, Integer.parseInt(year[newVal]), indexLunar + 1, 0);
 				}
@@ -198,21 +205,25 @@ public class ConvertDateActivity extends Activity {
 		}
 		// indexLunar = day;
 		if (maxDay == 28) {
+			dates.setDisplayedValues(null);
 			dates.setMaxValue(27);
 			dates.setDisplayedValues(date28);
 			// dates.setValue(day);
 		}
 		if (maxDay == 29) {
+			dates.setDisplayedValues(null);
 			dates.setMaxValue(28);
 			dates.setDisplayedValues(date29);
 			// dates.setValue(day);
 		}
 		if (maxDay == 30) {
+			dates.setDisplayedValues(null);
 			dates.setMaxValue(29);
 			dates.setDisplayedValues(date30);
 			// dates.setValue(day);
 		}
 		if (maxDay == 31) {
+			dates.setDisplayedValues(null);
 			dates.setMaxValue(30);
 			dates.setDisplayedValues(date31);
 			// dates.setValue(day - 1);
@@ -250,6 +261,7 @@ public class ConvertDateActivity extends Activity {
 					k++;
 				}
 			}
+			monthl.setDisplayedValues(null);
 			monthl.setMaxValue(12);
 			monthl.setDisplayedValues(monthLunar);
 			if (leap == 1) {
@@ -259,6 +271,7 @@ public class ConvertDateActivity extends Activity {
 			}
 		} else {
 			monthLunar = new String[13];
+			monthl.setDisplayedValues(null);
 			monthl.setMaxValue(11);
 			monthl.setDisplayedValues(month);
 			monthl.setValue(montht);
@@ -271,11 +284,13 @@ public class ConvertDateActivity extends Activity {
 		}
 
 		if (maxDay == 29) {
+			datel.setDisplayedValues(null);
 			datel.setMaxValue(28);
 			datel.setDisplayedValues(date29);
 			// dates.setValue(day);
 		}
 		if (maxDay == 30) {
+			datel.setDisplayedValues(null);
 			datel.setMaxValue(29);
 			datel.setDisplayedValues(date30);
 			// dates.setValue(day);
