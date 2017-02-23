@@ -9,9 +9,12 @@ import com.example.date.DayMonthYear;
 import com.example.date.Lunar;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.NumberPicker;
-import android.widget.Toast;
 
 public class ConvertDateActivity extends Activity {
 
@@ -25,6 +28,7 @@ public class ConvertDateActivity extends Activity {
 	int leapTemp = 0;
 	DayMonthYear dmy, dmys;
 
+	ImageButton imageButton;
 	NumberPicker datel, monthl, yearl;
 	String[] monthLunar = new String[13];
 
@@ -39,13 +43,15 @@ public class ConvertDateActivity extends Activity {
 		datel = (NumberPicker) findViewById(R.id.datel);
 		monthl = (NumberPicker) findViewById(R.id.monthl);
 		yearl = (NumberPicker) findViewById(R.id.yearl);
+		imageButton = (ImageButton)findViewById(R.id.imageDetail);
 		init();
 		dates.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				indexDay = newVal;
-				setDates(Integer.parseInt(month[months.getValue()]), Integer.parseInt(year[years.getValue()]), indexDay);
+				setDates(Integer.parseInt(month[months.getValue()]), Integer.parseInt(year[years.getValue()]),
+						indexDay);
 				convertSolarLunar();
 
 			}
@@ -79,7 +85,7 @@ public class ConvertDateActivity extends Activity {
 				indexLunar = newVal;
 				String temp = String.valueOf(monthl.getValue());
 				if (temp.endsWith("+")) {
-					setDatel(indexMonth, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 1);
+					setDatel(indexMonth-1, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 1);
 				} else {
 					setDatel(indexMonth, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 0);
 				}
@@ -93,7 +99,7 @@ public class ConvertDateActivity extends Activity {
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				indexMonth = newVal;
 				if (String.valueOf(monthLunar[newVal]).endsWith("+")) {
-					setDatel(newVal, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 1);
+					setDatel(newVal-1, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 1);
 				} else {
 					setDatel(newVal, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 0);
 				}
@@ -107,13 +113,24 @@ public class ConvertDateActivity extends Activity {
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				String temp = String.valueOf(monthl.getValue());
 				if (temp.endsWith("+")) {
-					setDatel(indexMonth, Integer.parseInt(year[newVal]), indexLunar + 1, 1);
+					setDatel(indexMonth-1, Integer.parseInt(year[newVal]), indexLunar + 1, 1);
 				} else {
 					setDatel(indexMonth, Integer.parseInt(year[newVal]), indexLunar + 1, 0);
 				}
 				convertLunarSolar();
 			}
 
+		});
+		imageButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent in = new Intent(ConvertDateActivity.this, LunarActivity.class);
+				Bundle bd = new Bundle();
+				bd.putSerializable("month", dmys);
+				in.putExtras(bd);
+				ConvertDateActivity.this.startActivity(in);
+			}
 		});
 
 	}
@@ -180,19 +197,19 @@ public class ConvertDateActivity extends Activity {
 		yearl.setMaxValue(200);
 		yearl.setDisplayedValues(year);
 		yearl.setWrapSelectorWheel(false);
-		setDatel(lunar.getMonth()-1, lunar.getYear(), lunar.getDay(), lunar.getLeap());
+		setDatel(lunar.getMonth() - 1, lunar.getYear(), lunar.getDay(), lunar.getLeap());
 		indexLunar = lunar.getDay() - 1;
 
 	}
 
 	private void convertLunarSolar() {
-			DayMonthYear lunar1 = Lunar.lunar2Solar(dmy);
-			setDates(lunar1.getMonth(), lunar1.getYear(), lunar1.getDay() - 1);
+		DayMonthYear lunar1 = Lunar.lunar2Solar(dmy);
+		setDates(lunar1.getMonth(), lunar1.getYear(), lunar1.getDay() - 1);
 	}
 
 	private void convertSolarLunar() {
-			DayMonthYear lunar2 = Lunar.solar2Lunar(dmys);
-			setDatel(lunar2.getMonth()-1, lunar2.getYear(), lunar2.getDay(), lunar2.getLeap());
+		DayMonthYear lunar2 = Lunar.solar2Lunar(dmys);
+		setDatel(lunar2.getMonth() - 1, lunar2.getYear(), lunar2.getDay(), lunar2.getLeap());
 	}
 
 	private void setDates(int montht, int yeart, int dayt) {
@@ -242,8 +259,8 @@ public class ConvertDateActivity extends Activity {
 			maxDay = maxDay(montht < monthLeap ? montht + 1 : montht, yeart, leap);
 			dmy = new DayMonthYear(dayt, montht < monthLeap ? montht + 1 : montht, yeart, leap);
 		} else {
-			maxDay = maxDay(montht==12?montht:montht + 1, yeart, leap);
-			dmy = new DayMonthYear(dayt, montht==12?montht:montht + 1, yeart, leap);
+			maxDay = maxDay(montht == 12 ? montht : montht + 1, yeart, leap);
+			dmy = new DayMonthYear(dayt, montht == 12 ? montht : montht + 1, yeart, leap);
 		}
 		// indexMonth = ((montht <= monthLeap) && (leap == 0)) ? montht - 1 :
 		indexMonth = montht;
@@ -264,13 +281,14 @@ public class ConvertDateActivity extends Activity {
 			monthl.setDisplayedValues(null);
 			monthl.setMaxValue(12);
 			monthl.setDisplayedValues(monthLunar);
-			if (leap == 1) {
-				monthl.setValue(montht);
+			if (montht+1 > monthLeap || leap == 1) {
+				monthl.setValue(montht+1);
 			} else {
 				monthl.setValue(montht);
 			}
 		} else {
-			if(indexMonth == 12)  indexMonth = 11;
+			if (indexMonth == 12)
+				indexMonth = 11;
 			monthLunar = new String[13];
 			monthl.setDisplayedValues(null);
 			monthl.setMaxValue(11);
