@@ -2,13 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/nent"
     android:orientation="vertical"
     android:theme="@android:style/Theme.Holo.Light" >
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lịch Dương "
+        android:layout_gravity="center"
+        android:layout_marginTop="5px"
+        android:textColor="#02E6A1"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#7DE2D1"
+        android:layout_height="200px"
+        android:layout_marginTop="20px"
         android:gravity="center" >
 
         <NumberPicker
@@ -21,21 +32,32 @@
             android:id="@+id/months"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5px"
             android:background="#6677CD" />
 
         <NumberPicker
             android:id="@+id/years"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5px"
             android:background="#6677CD" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textView2"
+         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lịch Âm "
+        android:layout_gravity="center"
+        android:layout_marginTop="20px"
+        android:textColor="#02E6A1"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-         android:gravity="center" 
-         android:background="#7DE2D1"
-        android:layout_marginTop="40px" >
+        android:layout_height="200px"
+        android:layout_marginTop="5px"
+        android:gravity="center" >
 
         <NumberPicker
             android:id="@+id/datel"
@@ -47,13 +69,23 @@
             android:id="@+id/monthl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5px"
             android:background="#6677CD" />
 
         <NumberPicker
             android:id="@+id/yearl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5px"
             android:background="#6677CD" />
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10px"
+        android:layout_gravity="center"
+        android:background="@drawable/search" />
 
 </LinearLayout>

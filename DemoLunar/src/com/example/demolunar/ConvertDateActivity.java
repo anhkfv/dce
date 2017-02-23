@@ -180,7 +180,7 @@ public class ConvertDateActivity extends Activity {
 		yearl.setMaxValue(200);
 		yearl.setDisplayedValues(year);
 		yearl.setWrapSelectorWheel(false);
-		setDatel(lunar.getMonth(), lunar.getYear(), lunar.getDay(), lunar.getLeap());
+		setDatel(lunar.getMonth()-1, lunar.getYear(), lunar.getDay(), lunar.getLeap());
 		indexLunar = lunar.getDay() - 1;
 
 	}
@@ -242,8 +242,8 @@ public class ConvertDateActivity extends Activity {
 			maxDay = maxDay(montht < monthLeap ? montht + 1 : montht, yeart, leap);
 			dmy = new DayMonthYear(dayt, montht < monthLeap ? montht + 1 : montht, yeart, leap);
 		} else {
-			maxDay = maxDay(montht + 1, yeart, leap);
-			dmy = new DayMonthYear(dayt, montht + 1, yeart, leap);
+			maxDay = maxDay(montht==12?montht:montht + 1, yeart, leap);
+			dmy = new DayMonthYear(dayt, montht==12?montht:montht + 1, yeart, leap);
 		}
 		// indexMonth = ((montht <= monthLeap) && (leap == 0)) ? montht - 1 :
 		indexMonth = montht;
@@ -270,6 +270,7 @@ public class ConvertDateActivity extends Activity {
 				monthl.setValue(montht);
 			}
 		} else {
+			if(indexMonth == 12)  indexMonth = 11;
 			monthLunar = new String[13];
 			monthl.setDisplayedValues(null);
 			monthl.setMaxValue(11);
