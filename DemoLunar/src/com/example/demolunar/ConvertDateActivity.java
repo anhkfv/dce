@@ -26,6 +26,7 @@ public class ConvertDateActivity extends Activity {
 	int indexLunar = 0;
 	int indexMonth = 0;
 	int leapTemp = 0;
+	boolean slide;
 	DayMonthYear dmy, dmys;
 
 	ImageButton imageButton;
@@ -43,7 +44,7 @@ public class ConvertDateActivity extends Activity {
 		datel = (NumberPicker) findViewById(R.id.datel);
 		monthl = (NumberPicker) findViewById(R.id.monthl);
 		yearl = (NumberPicker) findViewById(R.id.yearl);
-		imageButton = (ImageButton)findViewById(R.id.imageDetail);
+		imageButton = (ImageButton) findViewById(R.id.imageDetail);
 		init();
 		dates.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
@@ -85,7 +86,7 @@ public class ConvertDateActivity extends Activity {
 				indexLunar = newVal;
 				String temp = String.valueOf(monthl.getValue());
 				if (temp.endsWith("+")) {
-					setDatel(indexMonth-1, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 1);
+					setDatel(indexMonth - 1, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 1);
 				} else {
 					setDatel(indexMonth, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 0);
 				}
@@ -98,8 +99,9 @@ public class ConvertDateActivity extends Activity {
 			@Override
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				indexMonth = newVal;
+				slide = true;
 				if (String.valueOf(monthLunar[newVal]).endsWith("+")) {
-					setDatel(newVal-1, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 1);
+					setDatel(newVal - 1, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 1);
 				} else {
 					setDatel(newVal, Integer.parseInt(year[yearl.getValue()]), indexLunar + 1, 0);
 				}
@@ -113,7 +115,7 @@ public class ConvertDateActivity extends Activity {
 			public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 				String temp = String.valueOf(monthl.getValue());
 				if (temp.endsWith("+")) {
-					setDatel(indexMonth-1, Integer.parseInt(year[newVal]), indexLunar + 1, 1);
+					setDatel(indexMonth - 1, Integer.parseInt(year[newVal]), indexLunar + 1, 1);
 				} else {
 					setDatel(indexMonth, Integer.parseInt(year[newVal]), indexLunar + 1, 0);
 				}
@@ -122,7 +124,7 @@ public class ConvertDateActivity extends Activity {
 
 		});
 		imageButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Intent in = new Intent(ConvertDateActivity.this, LunarActivity.class);
@@ -197,6 +199,7 @@ public class ConvertDateActivity extends Activity {
 		yearl.setMaxValue(200);
 		yearl.setDisplayedValues(year);
 		yearl.setWrapSelectorWheel(false);
+		slide = false;
 		setDatel(lunar.getMonth() - 1, lunar.getYear(), lunar.getDay(), lunar.getLeap());
 		indexLunar = lunar.getDay() - 1;
 
@@ -246,6 +249,7 @@ public class ConvertDateActivity extends Activity {
 			// dates.setValue(day - 1);
 		}
 		dates.setValue(dayt);
+		slide = false;
 		dmys = new DayMonthYear(dayt + 1, montht, yeart);
 	}
 
@@ -281,8 +285,11 @@ public class ConvertDateActivity extends Activity {
 			monthl.setDisplayedValues(null);
 			monthl.setMaxValue(12);
 			monthl.setDisplayedValues(monthLunar);
-			if (montht+1 > monthLeap || leap == 1) {
-				monthl.setValue(montht+1);
+			if (montht + 1 > monthLeap || leap == 1) {
+				if (slide) {
+					monthl.setValue(leap == 1?(montht+1):montht);
+				} else
+					monthl.setValue(montht + 1);
 			} else {
 				monthl.setValue(montht);
 			}
