@@ -30,7 +30,7 @@ public class Lunar implements Serializable {
 	public static final String[] TIETKHI = new String[] { "Tiểu hàn", "Đại hàn", "Lập xuân ", "Vũ thủy", "Kinh trập",
 			"Xuân phân", "Thanh minh", "Cốc vũ", "Lập hạ", "Tiểu mãn", "Mang chủng", "Hạ chí", "Tiểu thử", "Đại thử",
 			"Lập thu", "Xử thử", "Bạch lộ", "Thu phân", "Hàn lộ", "Sương giáng", "Lập đông", "Tiểu tuyết", "Đại tuyết",
-			"Dong chi" };
+			"Đông chí" };
 
 	public static final String[] TRUC = new String[] { "Trực Kiến", "Trực Trừ", "Trực Mãn", "Trực Bình", "Trực Định",
 			"Trực Chấp", "Trực Phá", "Trực Nguy", "Trực Thành", "Trực Thâu", "Trực Khai", "Trực Bế" };

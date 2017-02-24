@@ -257,8 +257,7 @@ public class ConvertDateActivity extends Activity {
 		yearl.setValue(yeart - 1900);
 		leapTemp = leap;
 		int maxDay;
-		Lunar ln = new Lunar();
-		int monthLeap = ln.lunarYear(yeart).length == 14 ? leap(montht, yeart) : -1;
+		int monthLeap = Lunar.lunarYear(yeart).length == 14 ? leap(montht, yeart) : -1;
 		if (monthLeap != -1) {
 			maxDay = maxDay(montht < monthLeap ? montht + 1 : montht, yeart, leap);
 			dmy = new DayMonthYear(dayt, montht < monthLeap ? montht + 1 : montht, yeart, leap);
@@ -341,14 +340,13 @@ public class ConvertDateActivity extends Activity {
 	}
 
 	public int leap(int m, int y) {
-		Lunar ln = new Lunar();
 		List<DayMonthYear> dmy = new ArrayList<DayMonthYear>();
-		for (int i = 0; i < ln.lunarYear(y).length; i++) {
-			dmy.add(ln.lunarYear(y)[i]);
+		for (int i = 0; i < Lunar.lunarYear(y).length; i++) {
+			dmy.add(Lunar.lunarYear(y)[i]);
 
 		}
-		for (int i = 0; i < ln.lunarYear(y + 1).length; i++) {
-			dmy.add(ln.lunarYear(y + 1)[i]);
+		for (int i = 0; i < Lunar.lunarYear(y + 1).length; i++) {
+			dmy.add(Lunar.lunarYear(y + 1)[i]);
 		}
 		for (int k = 0; k < dmy.size(); k++) {
 			if (dmy.get(k).getLeap() == 1 && y == dmy.get(k).getYear()) {
