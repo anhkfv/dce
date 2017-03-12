@@ -46,7 +46,7 @@ public class WeatherDate {
 		setTemp("" + tempT);
 	}
 
-	public static String getWeatherIcon() {
+	public String getWeatherIcon() {
 		return weatherIcon;
 	}
 

@@ -23,7 +23,6 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
 	Handler mHandler = new Handler();
-	private TransInforWeather _IPLocation = null;
 	private ArrayList<WeatherEntry> _forecast = null;
 	WeatherCustomAdapter userAdapter;
 	private ProgressDialog pd;

@@ -5,11 +5,8 @@ import com.example.weatherday.WeatherIcon;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.TextureView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class InformationWeatherByDay extends Activity {
 	InformationDto dto;
