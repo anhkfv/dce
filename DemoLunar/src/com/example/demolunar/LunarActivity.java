@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.example.adapter.FragmentDayAdapter;
 import com.example.date.DayMonthYear;
@@ -15,11 +17,12 @@ import com.example.note.Note;
 import com.example.sqlite_note.DataNoteHandler;
 import com.example.weather.MainActivity;
 import com.example.weather.TransInforWeather;
+import com.example.weatherday.GPSTracker;
 import com.example.weatherday.LocationKey;
 import com.example.weatherday.WeatherDate;
 import com.example.weatherday.WeatherIcon;
 
-import android.content.Context;
+import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -28,13 +31,13 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.test.mock.MockPackageManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -66,6 +69,10 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 	List<Note> mangNotet = new ArrayList<>();
 	List<Note> mangNote = new ArrayList<Note>();
 	DayMonthYear dmyCurrent, dmyChanger, dmyTable, dmyCustomMOnth, dmyt;
+	private static final int REQUEST_CODE_PERMISSION = 2;
+	String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
+	GPSTracker gps;
+	private final Lock lock = new ReentrantLock();
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -166,7 +173,7 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 
 			@Override
 			public void onClick(View v) {
-				if (forecast.getWeatherIcon() != null) {
+				if (forecast != null) {
 					Intent it = new Intent(LunarActivity.this, MainActivity.class);
 					Bundle bundle = new Bundle();
 					TransInforWeather transInforWeather = new TransInforWeather();
@@ -336,18 +343,49 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 	}
 
 	public void loadData() {
-		ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-		NetworkInfo mMobileInternet = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		// ConnectivityManager connManager = (ConnectivityManager)
+		// getSystemService(Context.CONNECTIVITY_SERVICE);
+		// NetworkInfo mWifi =
+		// connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		// NetworkInfo mMobileInternet =
+		// connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		//
+		// if (mWifi.isConnected()) {
+		// getWUndergroundWeather();
+		// } else if (!mMobileInternet.isConnected()) {
+		// Toast.makeText(LunarActivity.this, "Không kết nối mạng",
+		// Toast.LENGTH_LONG).show();
+		// imgBt.setEnabled(false);
+		//
+		// } else {
+		// getWUndergroundWeather();
+		// }
+		try {
+			if (ActivityCompat.checkSelfPermission(this, mPermission) != MockPackageManager.PERMISSION_GRANTED) {
 
-		if (mWifi.isConnected()) {
-			getWUndergroundWeather();
-		} else if (!mMobileInternet.isConnected()) {
-			Toast.makeText(LunarActivity.this, "Không kết nối mạng", Toast.LENGTH_LONG).show();
-			imgBt.setEnabled(false);
+				ActivityCompat.requestPermissions(this, new String[] { mPermission }, REQUEST_CODE_PERMISSION);
+			}
+			lock.lock();
+			gps = new GPSTracker(LunarActivity.this);
+			lock.unlock();
+			// check if GPS enabled
+			if (gps.canGetLocation()) {
 
-		} else {
-			getWUndergroundWeather();
+				double latitude = gps.getLatitude();
+				double longitude = gps.getLongitude();
+				getWUndergroundWeather();
+
+				// \n is for new line
+				Toast.makeText(getApplicationContext(),
+						"Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+			} else {
+				// can't get location
+				// GPS or Network is not enabled
+				// Ask user to enable GPS/network in settings
+				gps.showSettingsAlert();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -364,8 +402,10 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 			public void run() {
 				locationKey = new LocationKey();
 				try {
-					locationKey.loadData();
-					if (locationKey.getLocatioKey() != null) {
+					lock.lock();
+					locationKey.loadData(gps.getLatitude(), gps.getLongitude());
+					lock.unlock();
+					if (locationKey != null) {
 						forecast = new WeatherDate(locationKey.getLocatioKey());
 						try {
 							forecast.loadData();
@@ -379,7 +419,7 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
-						if (forecast.getWeatherIcon() != null) {
+						if (forecast != null) {
 							renderWeather();
 						}
 					}
