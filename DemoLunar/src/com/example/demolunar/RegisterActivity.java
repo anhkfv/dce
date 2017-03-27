@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
@@ -39,7 +40,8 @@ public class RegisterActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				pd = ProgressDialog.show(RegisterActivity.this, "", "Register", true);
-				String url = "http://192.168.1.78:8080/Note/Demo/Login/Login";
+				pd.show();
+				String url = "http://192.168.1.78:8080/Note/Demo/login/login";
 				JSONObject jsonObject = new JSONObject();
 				try {
 					jsonObject.put("id", userName.getText().toString());
@@ -54,10 +56,15 @@ public class RegisterActivity extends Activity {
 				result = new Gson().fromJson(data, InfoResult.class);
 				if (result.isStatus()) {
 					Toast.makeText(RegisterActivity.this, result.getNameNotice(), Toast.LENGTH_LONG).show();
+					SharedPreferences pre = getSharedPreferences("login", MODE_PRIVATE);
+					SharedPreferences.Editor editor = pre.edit();
+					editor.putString("id", userName.getText().toString());
+					editor.putString("password", password.getText().toString());
+					editor.commit();
 					Intent it = new Intent(RegisterActivity.this, SyncDataServer.class);
 					startActivity(it);
 					finish();
-				}else{
+				} else {
 					Toast.makeText(RegisterActivity.this, result.getNameNotice(), Toast.LENGTH_LONG).show();
 				}
 			}

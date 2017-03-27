@@ -18,6 +18,10 @@ public class Note implements Serializable {
 		this.id=id;
 	}
 
+	public Note(){
+		
+	}
+
 	public int getId() {
 		return id;
 	}

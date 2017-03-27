@@ -1,5 +1,8 @@
 package com.example.demolunar;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import org.json.JSONObject;
 
 import com.example.server.InfoResult;
@@ -9,6 +12,7 @@ import com.google.gson.Gson;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
@@ -24,6 +28,8 @@ public class LoginActivity extends Activity {
 	Button login;
 	TextView register;
 	private ProgressDialog pd;
+	private final Lock lock = new ReentrantLock();
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +48,8 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				pd = ProgressDialog.show(LoginActivity.this, "", "Login", true);
-				String url = "http://192.168.1.78:8080/Note/Demo/Login/check";
+				pd.show();
+				String url = "http://192.168.1.78:8080/Note/Demo/login/check";
 				JSONObject jsonObject = new JSONObject();
 				try {
 					jsonObject.put("id", userName.getText().toString());
@@ -54,12 +61,20 @@ public class LoginActivity extends Activity {
 				pd.hide();
 				pd.dismiss();
 				InfoResult result = new InfoResult();
+				lock.lock();
 				result = new Gson().fromJson(data, InfoResult.class);
+				lock.unlock();
 				if (result.isStatus()) {
 					Toast.makeText(LoginActivity.this, result.getNameNotice(), Toast.LENGTH_LONG).show();
-//					Intent it = new Intent(LoginActivity.this, SyncDataServer.class);
-//					it.putExtra("data", data);
-//					startActivity(it);
+					SharedPreferences pre = getSharedPreferences("login", MODE_PRIVATE);
+					SharedPreferences.Editor editor = pre.edit();
+					editor.putString("id", userName.getText().toString());
+					editor.putString("password", password.getText().toString());
+					editor.commit();
+					 Intent it = new Intent(LoginActivity.this,
+					 SyncDataServer.class);
+					 it.putExtra("data", data);
+					 startActivity(it);
 				} else {
 					Toast.makeText(LoginActivity.this, result.getNameNotice(), Toast.LENGTH_LONG).show();
 				}
@@ -69,12 +84,9 @@ public class LoginActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				String url = "http://192.168.1.78:8080/Note/Demo/Login/get";
-				JSONObject jsonObject = new JSONObject();
-				String data = SendData.sendJson(url, jsonObject.toString());
-				Toast.makeText(LoginActivity.this, data, Toast.LENGTH_LONG).show();
-//				Intent it = new Intent(LoginActivity.this, RegisterActivity.class);
-//				startActivity(it);
+				 Intent it = new Intent(LoginActivity.this,
+				 RegisterActivity.class);
+				 startActivity(it);
 			}
 		});
 	}
