@@ -40,7 +40,6 @@ public class SyncDataServer extends Activity {
 	private static String URL_GET = "http://192.168.1.78:8080/Note/Demo/login/get";
 	private static String FIND_ALL = "SELECT*FROM Note";
 	private static String FIND_WITH_ID = "SELECT*FROM Note  WHERE id = ";
-	private Handler handler = new Handler();
 
 	private final Lock lock = new ReentrantLock();
 	private Cursor note;
@@ -65,31 +64,47 @@ public class SyncDataServer extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				sendData.setEnabled(false);
 				pd = ProgressDialog.show(SyncDataServer.this, "", "Infomation", true);
-				JSONObject jsonObject = new JSONObject();
+				new AsyncTask<Void, Void, Void>() {
 
-				String data = "";
-				try {
-					jsonObject.put("id", id.toString());
-					jsonObject.put("password", password.toString());
-					String json = new Gson().toJson(notes);
-					JSONArray jsonArray = new JSONArray(json);
-					jsonObject.accumulate("notes", jsonArray);
-					lock.lock();
-					data = SendData.sendJson(URL_SEND, jsonObject.toString());
-					lock.unlock();
-					pd.hide();
-					pd.dismiss();
-				} catch (Exception ex) {
+					@Override
+					protected Void doInBackground(Void... params) {
+						sendData.setEnabled(false);
+						JSONObject jsonObject = new JSONObject();
 
-				}
+						String data = "";
+						try {
+							jsonObject.put("id", id.toString());
+							jsonObject.put("password", password.toString());
+							String json = new Gson().toJson(notes);
+							JSONArray jsonArray = new JSONArray(json);
+							jsonObject.accumulate("notes", jsonArray);
+							lock.lock();
+							data = SendData.sendJson(URL_SEND, jsonObject.toString());
+							lock.unlock();
+							pd.hide();
+							pd.dismiss();
+						} catch (Exception ex) {
 
-				DataResult result = new DataResult();
-				result = new Gson().fromJson(data, DataResult.class);
-				Toast.makeText(SyncDataServer.this, result.getDetail(), Toast.LENGTH_LONG).show();
-				sendData.setEnabled(true);
-				// tv.setText(result.getDetail());
+						}
+						if (!data.equals("")) {
+							DataResult result = new DataResult();
+							result = new Gson().fromJson(data, DataResult.class);
+							Toast.makeText(SyncDataServer.this, result.getDetail(), Toast.LENGTH_LONG).show();
+							sendData.setEnabled(true);
+						}
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Void result) {
+						super.onPostExecute(result);
+						pd.hide();
+						pd.dismiss();
+					}
+
+				}.execute();
+
 			}
 		});
 
