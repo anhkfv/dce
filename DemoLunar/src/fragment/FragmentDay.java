@@ -103,7 +103,7 @@ public class FragmentDay extends Fragment {
 		SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy");
 		String temp = ft.format(dat);
 		mang = new ArrayList<Note>();
-		Cursor note = dbb.GetData("SELECT*FROM Note");
+		Cursor note = dbb.getData("SELECT*FROM Note");
 		while (note.moveToNext()) {
 			if (temp.equals(note.getString(4))) {
 				mang.add(new Note(note.getString(1), note.getString(2), note.getString(3), note.getString(4),

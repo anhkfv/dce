@@ -11,17 +11,22 @@
         android:layout_height="wrap_content"
         android:text="TextView" />
 
-    <ImageButton
-        android:id="@+id/sendData"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/icon02" />
+        android:gravity="center" >
 
-    <ImageButton
-        android:id="@+id/getInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/circle_red" />
+        <ImageButton
+            android:id="@+id/sendData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon02" />
+
+        <ImageButton
+            android:id="@+id/getInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circle_red" />
+    </LinearLayout>
 
 </LinearLayout>
-

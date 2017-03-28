@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
 
 		if (mWifi.isConnected()) {
 			 getWUndergroundWeather();
-		} else if (!mMobileInternet.isConnected()) {
+		} else if (!mMobileInternet.isConnected()||mWifi.isConnected()) {
 			TextView txtZipCode = (TextView) findViewById(R.id.txtRegionCode);
 			txtZipCode.setText("Không thể kết nối mạng");
 			pd.hide();

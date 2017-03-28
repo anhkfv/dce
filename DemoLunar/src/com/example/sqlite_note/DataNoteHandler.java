@@ -58,7 +58,7 @@ public class DataNoteHandler extends SQLiteOpenHelper {
 	 * All CRUD(Create, Read, Update, Delete) Operations
 	 */
 
-	public Cursor GetData(String sql) {
+	public Cursor getData(String sql) {
 		SQLiteDatabase db = getWritableDatabase();
 		return db.rawQuery(sql, null);
 	}
@@ -76,6 +76,18 @@ public class DataNoteHandler extends SQLiteOpenHelper {
 		statement.executeInsert();
 	}
 
+	public void inserNote(String nameNote, String detailNote, String hinh, String date) {
+		SQLiteDatabase db = getWritableDatabase();
+		String sql = "INSERT INTO Note VALUES(null,?,?,?,?)";
+		SQLiteStatement statement = db.compileStatement(sql);
+		statement.clearBindings();
+		statement.bindString(1, nameNote);
+		statement.bindString(2, detailNote);
+		statement.bindString(3, hinh);
+		statement.bindString(4, date);
+		statement.executeInsert();
+	}
+	
 	public void updateContact(String nameNote, String detailNote, String hinh, Date date,int id) {
 		SQLiteDatabase db = getWritableDatabase();
 		SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy");
@@ -85,7 +97,14 @@ public class DataNoteHandler extends SQLiteOpenHelper {
 		Log.d("update id= ",""+id);
 		statement.executeUpdateDelete();
 	}
-
+	public void updateNote(String nameNote, String detailNote, String hinh, String date,int id) {
+		SQLiteDatabase db = getWritableDatabase();
+		String sql = " UPDATE Note SET nameNote = '"+nameNote+"' , detailNote =' "+detailNote+"' ,imageNote = '"+hinh+"' "+" , dateNote = '"+ date +"' WHERE " + KEY_ID + " = "+id;
+		Log.d("update sql= ",""+sql);
+		SQLiteStatement statement = db.compileStatement(sql);
+		Log.d("update id= ",""+id);
+		statement.executeUpdateDelete();
+	}
 	public void deleteContact(Note contact) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.delete(TABLE_CONTACTS, KEY_ID + " = ?", new String[] { String.valueOf(contact.id) });

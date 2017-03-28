@@ -24,6 +24,7 @@ import com.example.weatherday.WeatherIcon;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -365,24 +366,23 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 
 				ActivityCompat.requestPermissions(this, new String[] { mPermission }, REQUEST_CODE_PERMISSION);
 			}
-			lock.lock();
-			gps = new GPSTracker(LunarActivity.this);
-			lock.unlock();
-			// check if GPS enabled
-			if (gps.canGetLocation()) {
+			PackageManager packageManager = this.getPackageManager();
+			boolean hasGPS = packageManager.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+			if (hasGPS) {
+				lock.lock();
+				gps = new GPSTracker(LunarActivity.this);
+				lock.unlock();
+				// check if GPS enabled
+				if (gps.canGetLocation()) {
 
-				double latitude = gps.getLatitude();
-				double longitude = gps.getLongitude();
-				getWUndergroundWeather();
-
-				// \n is for new line
-				Toast.makeText(getApplicationContext(),
-						"Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-			} else {
-				// can't get location
-				// GPS or Network is not enabled
-				// Ask user to enable GPS/network in settings
-				gps.showSettingsAlert();
+					double latitude = gps.getLatitude();
+					double longitude = gps.getLongitude();
+					getWUndergroundWeather();
+					Toast.makeText(getApplicationContext(),
+							"Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+				} else {
+					gps.showSettingsAlert();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -449,7 +449,7 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 
 	private void loadRe() {
 		mang = new ArrayList<Note>();
-		Cursor note = dbb.GetData("SELECT*FROM Note");
+		Cursor note = dbb.getData("SELECT*FROM Note");
 		while (note.moveToNext()) {
 			mang.add(new Note(note.getString(1), note.getString(2), note.getString(3), note.getString(4),
 					note.getInt(0)));
