@@ -32,6 +32,8 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -73,6 +75,7 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 	private static final int REQUEST_CODE_PERMISSION = 2;
 	String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
 	GPSTracker gps;
+	Location location;
 	private final Lock lock = new ReentrantLock();
 
 	@Override
@@ -368,21 +371,50 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 			}
 			PackageManager packageManager = this.getPackageManager();
 			boolean hasGPS = packageManager.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+			gps = new GPSTracker(LunarActivity.this);
 			if (hasGPS) {
-				lock.lock();
-				gps = new GPSTracker(LunarActivity.this);
-				lock.unlock();
-				// check if GPS enabled
-				if (gps.canGetLocation()) {
+				new AsyncTask<Void, Void, Location>() {
 
-					double latitude = gps.getLatitude();
-					double longitude = gps.getLongitude();
-					getWUndergroundWeather();
-					Toast.makeText(getApplicationContext(),
-							"Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-				} else {
-					gps.showSettingsAlert();
-				}
+					@Override
+					protected Location doInBackground(Void... params) {
+						
+						lock.lock();
+						int count = 0;
+						while (gps.location == null && count < 1000){
+							location  = gps.getLocation();
+							try {
+								Thread.sleep(2000);
+								count ++;
+								Log.d("log dem ", ""+count);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						
+						lock.unlock();
+						return location;
+					}
+
+					@Override
+					protected void onPostExecute(Location result) {
+						// check if GPS enabled
+						if (gps.canGetLocation()) {
+
+							double latitude = gps.getLatitude();
+							double longitude = gps.getLongitude();
+							getWUndergroundWeather();
+							Toast.makeText(getApplicationContext(),
+									"Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+						} else {
+							gps.showSettingsAlert();
+						}
+						super.onPostExecute(result);
+					}
+					
+
+		
+				}.execute();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
