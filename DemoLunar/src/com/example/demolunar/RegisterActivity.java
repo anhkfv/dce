@@ -21,11 +21,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import processcommon.TransparentProgressDialog;
 
 public class RegisterActivity extends Activity {
 	EditText userName, password, passwordConfim;
 	Button register;
-	private ProgressDialog pd;
+//	private ProgressDialog pd;
+	private TransparentProgressDialog pd;
 	private final Lock lock = new ReentrantLock();
 
 	@Override
@@ -44,7 +46,8 @@ public class RegisterActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				pd = ProgressDialog.show(RegisterActivity.this, "", "Register", true);
+				pd = new TransparentProgressDialog(RegisterActivity.this, R.drawable.spinner);
+				pd.show();
 				new AsyncTask<Void, Void, Void>() {
 
 					@Override

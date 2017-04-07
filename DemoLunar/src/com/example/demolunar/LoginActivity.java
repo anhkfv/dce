@@ -10,7 +10,6 @@ import com.example.server.SendData;
 import com.google.gson.Gson;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -22,13 +21,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import processcommon.TransparentProgressDialog;
 
 public class LoginActivity extends Activity {
 
 	EditText userName, password, passwordConfim;
 	Button login;
 	TextView register;
-	private ProgressDialog pd;
+	//private ProgressDialog pd;
+	private TransparentProgressDialog pd;
 	private final Lock lock = new ReentrantLock();
 
 	@Override
@@ -47,11 +48,12 @@ public class LoginActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				pd = ProgressDialog.show(LoginActivity.this, "", "Register", true);
+//				pd = ProgressDialog.show(LoginActivity.this, "", "Register", true);
+				pd = new TransparentProgressDialog(LoginActivity.this, R.drawable.spinner);
+				pd.show();
 				new AsyncTask<Void, Void, Void>() {
 					@Override
 					protected Void doInBackground(Void... params) {
-						pd.show();
 						String url = "http://192.168.1.78:8080/Note/Demo/login/check";
 						JSONObject jsonObject = new JSONObject();
 						try {

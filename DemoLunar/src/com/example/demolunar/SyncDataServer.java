@@ -28,10 +28,12 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import processcommon.TransparentProgressDialog;
 
 public class SyncDataServer extends Activity {
 	private ImageButton getInfo, sendData;
-	private ProgressDialog pd;
+//	private ProgressDialog pd;
+	private TransparentProgressDialog pd;
 	private TextView tv;
 	private DataNoteHandler hander = new DataNoteHandler(this);
 	private List<Note> notes = new ArrayList<>();
@@ -64,7 +66,8 @@ public class SyncDataServer extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				pd = ProgressDialog.show(SyncDataServer.this, "", "Infomation", true);
+				pd = new TransparentProgressDialog(SyncDataServer.this, R.drawable.spinner);
+				pd.show();
 				new AsyncTask<Void, Void, Void>() {
 
 					@Override
@@ -112,7 +115,8 @@ public class SyncDataServer extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				pd = ProgressDialog.show(SyncDataServer.this, "", "Infomation", true);
+				pd = new TransparentProgressDialog(SyncDataServer.this, R.drawable.spinner);
+				pd.show();
 				new AsyncTask<Void, Void, Void>() {
 
 					@Override

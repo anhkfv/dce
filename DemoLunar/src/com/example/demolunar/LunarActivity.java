@@ -28,7 +28,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Point;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -101,8 +103,11 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 				Display display = getWindowManager().getDefaultDisplay();
 				Point size = new Point();
 				display.getSize(size);
-				Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(mangNotet.get(0).imageNote), size.x,
-						size.y, true);
+//				Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(mangNotet.get(0).imageNote), size.x,
+//						size.y, true);
+//				BitmapDrawable background = new BitmapDrawable(bmp);
+//				linearLayout.setBackgroundDrawable(background);
+				Bitmap bmp = decodeSampledBitmapFromUri(mangNotet.get(0).imageNote, 500, 500);
 				BitmapDrawable background = new BitmapDrawable(bmp);
 				linearLayout.setBackgroundDrawable(background);
 			}
@@ -496,19 +501,55 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 		if (mangNotet.size() == 0) {
 			setBackground(dmyCurrent);
 		} else {
-			// Bitmap bmp =
-			// decodeSampledBitmapFromUri(mangNotet.get(0).imageNote, 500, 500);
-			Display display = getWindowManager().getDefaultDisplay();
-			Point size = new Point();
-			display.getSize(size);
-			Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(mangNotet.get(0).imageNote), size.x, size.y,
-					true);
+//			// Bitmap bmp =
+//			// decodeSampledBitmapFromUri(mangNotet.get(0).imageNote, 500, 500);
+//			Display display = getWindowManager().getDefaultDisplay();
+//			Point size = new Point();
+//			display.getSize(size);
+////			Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(mangNotet.get(0).imageNote), size.x, size.y,
+////					true);
+//			Bitmap bmp1 = scaleCenterCrop(BitmapFactory.decodeFile(mangNotet.get(0).imageNote),size.x,size.y);
+//			BitmapDrawable background = new BitmapDrawable(bmp1);
+//			linearLayout.setBackgroundDrawable(background);
+			
+			Bitmap bmp = decodeSampledBitmapFromUri(mangNotet.get(0).imageNote, 500, 500);
 			BitmapDrawable background = new BitmapDrawable(bmp);
 			linearLayout.setBackgroundDrawable(background);
 		}
 		super.onResume();
 	}
+	public Bitmap scaleCenterCrop(Bitmap source, int newHeight, int newWidth) {
+	    int sourceWidth = source.getWidth();
+	    int sourceHeight = source.getHeight();
 
+	    // Compute the scaling factors to fit the new height and width, respectively.
+	    // To cover the final image, the final scaling will be the bigger 
+	    // of these two.
+	    float xScale = (float) newWidth / sourceWidth;
+	    float yScale = (float) newHeight / sourceHeight;
+	    float scale = Math.max(xScale, yScale);
+
+	    // Now get the size of the source bitmap when scaled
+	    float scaledWidth = scale * sourceWidth;
+	    float scaledHeight = scale * sourceHeight;
+
+	    // Let's find out the upper left coordinates if the scaled bitmap
+	    // should be centered in the new size give by the parameters
+	    float left = (newWidth - scaledWidth) / 2;
+	    float top = (newHeight - scaledHeight) / 2;
+
+	    // The target rectangle for the new, scaled version of the source bitmap will now
+	    // be
+	    RectF targetRect = new RectF(left, top, left + scaledWidth, top + scaledHeight);
+
+	    // Finally, we create a new bitmap of the specified size and draw our new,
+	    // scaled bitmap onto it.
+	    Bitmap dest = Bitmap.createBitmap(newWidth, newHeight, source.getConfig());
+	    Canvas canvas = new Canvas(dest);
+	    canvas.drawBitmap(source, null, targetRect, null);
+
+	    return dest;
+	}
 	public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) {
 
 		Bitmap bm = null;

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import com.example.demolunar.R;
+import com.example.demolunar.SyncDataServer;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -17,7 +18,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import processcommon.TransparentProgressDialog;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -25,7 +28,8 @@ public class MainActivity extends Activity {
 	Handler mHandler = new Handler();
 	private ArrayList<WeatherEntry> _forecast = null;
 	WeatherCustomAdapter userAdapter;
-	private ProgressDialog pd;
+	//private ProgressDialog pd;
+	private TransparentProgressDialog pd;
 	Thread t;
 	ListView lstForecast;
 	TransInforWeather trans;
@@ -36,7 +40,6 @@ public class MainActivity extends Activity {
 
 		setContentView(R.layout.activity_weather);
 		trans = (TransInforWeather) getIntent().getSerializableExtra("Trans");
-		pd = ProgressDialog.show(this, "Thời tiết 5 ngày", "Đang tải dữ liệu..!", true);
 		loadData();
 	}
 
@@ -46,15 +49,17 @@ public class MainActivity extends Activity {
 		NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 		NetworkInfo mMobileInternet = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-		if (mWifi.isConnected()) {
+		if (mWifi.isConnected()||mMobileInternet.isConnected()) {
+			pd = new TransparentProgressDialog(MainActivity.this, R.drawable.spinner);
+		    pd.show();
+			// pd = ProgressDialog.show(this, "Thời tiết 5 ngày", "Đang tải dữ liệu..!", true);
 			 getWUndergroundWeather();
 		} else if (!mMobileInternet.isConnected()||mWifi.isConnected()) {
 			TextView txtZipCode = (TextView) findViewById(R.id.txtRegionCode);
 			txtZipCode.setText("Không thể kết nối mạng");
 			pd.hide();
 			pd.dismiss();
-		} else {
-			 getWUndergroundWeather();
+			finish();
 		}
 	}
 
