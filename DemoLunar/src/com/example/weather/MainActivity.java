@@ -57,8 +57,6 @@ public class MainActivity extends Activity {
 		} else if (!mMobileInternet.isConnected()||mWifi.isConnected()) {
 			TextView txtZipCode = (TextView) findViewById(R.id.txtRegionCode);
 			txtZipCode.setText("Không thể kết nối mạng");
-			pd.hide();
-			pd.dismiss();
 			finish();
 		}
 	}
