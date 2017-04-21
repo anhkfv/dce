@@ -147,10 +147,10 @@ public class ListNote extends Activity implements Serializable {
 		mang = new ArrayList<Note>();
 		Cursor note = dbb.getData("SELECT*FROM Note");
 		while (note.moveToNext()) {
-			if (temp.equals(note.getString(4))) {
+			//if (temp.equals(note.getString(4))) {
 
 				mang.add(new Note(note.getString(1), note.getString(2), note.getString(3), note.getString(4),note.getInt(0)));
-			}
+			//}
 		}
 		adapter = new ListNoteAdapter(getApplicationContext(), R.layout.custom_activity_note, mang);
 		lv.setAdapter(adapter);

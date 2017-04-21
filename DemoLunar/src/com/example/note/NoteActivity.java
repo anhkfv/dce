@@ -3,6 +3,7 @@ package com.example.note;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +15,7 @@ import com.example.sqlite_note.DataNoteHandler;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,9 +34,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("ClickableViewAccessibility")
@@ -51,26 +55,22 @@ public class NoteActivity extends Activity {
 	static final int ZOOM = 2;
 	int mode = NONE;
 	static String PATH_IMAGE = Environment.getExternalStorageDirectory().getAbsolutePath();
+	static final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 	private String path;
-
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-
+	private int mYear, mMonth, mDay;
 	ImageView imgvHinh;
 	ImageButton imgAdd;
 	EditText edtTen, edtGia;
-	ImageButton btnSave, imageReplace;
+	TextView textDate;
+	ImageButton btnSave, imageReplace, imageDate;
 	Context context;
 	Note note;
 	DayMonthYear dmyt;
 	DayMonthYear dmyTemp;
 	String tempNameNote;
+	final Calendar c = Calendar.getInstance();
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,19 +86,50 @@ public class NoteActivity extends Activity {
 						RESULT_READ);
 			}
 		}
-		AnhXa();
+		init();
 		dmyt = (DayMonthYear) getIntent().getSerializableExtra("detailNoteDay");
 
 		note = (Note) getIntent().getSerializableExtra("detailNote");
 		tempNameNote = edtTen.getText().toString();
 		if (note != null) {
-			edtTen.setText(note.nameNote);
-			edtGia.setText(note.detailNote);
-			tempNameNote = edtTen.getText().toString();
-			Bitmap bitmap = decodeSampledBitmapFromUri(note.getImageNote(), 500, 500);
-			imgvHinh.setImageBitmap(bitmap);
+			try {
+				edtTen.setText(note.nameNote);
+				edtGia.setText(note.detailNote);
+				tempNameNote = edtTen.getText().toString();
+				Bitmap bitmap = decodeSampledBitmapFromUri(note.getImageNote(), 500, 500);
+				imgvHinh.setImageBitmap(bitmap);
+				textDate.setText(note.date);
+				Date dateT = df.parse(note.date);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(dateT);
+				mYear = cal.get(Calendar.YEAR);
+				mMonth = cal.get(Calendar.MONTH);
+				mDay = cal.get(Calendar.DAY_OF_MONTH);
+
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 		final DataNoteHandler db = new DataNoteHandler(this);
+		imageDate.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				DatePickerDialog datePickerDialog = new DatePickerDialog(NoteActivity.this,
+						new DatePickerDialog.OnDateSetListener() {
+
+					@Override
+					public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+						textDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+						mYear = year;
+						mMonth = monthOfYear;
+						mDay = dayOfMonth;
+					}
+				}, mYear, mMonth, mDay);
+				datePickerDialog.show();
+			}
+		});
 		btnSave.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -107,23 +138,26 @@ public class NoteActivity extends Activity {
 					if (note != null) {
 						Log.d("nhan note: ", "" + note.id);
 						String temp;
-						Date date;
-						SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-						date = df.parse(note.date);
+						Calendar cal = Calendar.getInstance();
+						cal.set(Calendar.DATE, mDay);
+						cal.set(Calendar.MONTH, mMonth);
+						cal.set(Calendar.YEAR, mYear);
+
+						Date d = cal.getTime();
 						if (getPath() == null) {
 							temp = note.imageNote;
 						} else {
 							temp = getPath();
 						}
 
-						db.updateContact(edtTen.getText().toString(), edtGia.getText().toString(), temp, date, note.id);
+						db.updateContact(edtTen.getText().toString(), edtGia.getText().toString(), temp, d, note.id);
 						Toast.makeText(NoteActivity.this, "cap nhat thanh cong", Toast.LENGTH_LONG).show();
 						finish();
 					} else {
 						Calendar cal = Calendar.getInstance();
-						cal.set(Calendar.DATE, dmyt.getDay());
-						cal.set(Calendar.MONTH, dmyt.getMonth() - 1);
-						cal.set(Calendar.YEAR, dmyt.getYear());
+						cal.set(Calendar.DATE, mDay);
+						cal.set(Calendar.MONTH, mMonth);
+						cal.set(Calendar.YEAR, mYear);
 						Date d = cal.getTime();
 						if (getPath() == null) {
 							setPath(PATH_IMAGE + "/ars3.jpg");
@@ -247,12 +281,18 @@ public class NoteActivity extends Activity {
 		}
 	};
 
-	public void AnhXa() {
+	public void init() {
 		imgvHinh = (ImageView) findViewById(R.id.imageView1);
 		edtTen = (EditText) findViewById(R.id.editText1);
 		edtGia = (EditText) findViewById(R.id.editText2);
 		btnSave = (ImageButton) findViewById(R.id.button1);
 		imgAdd = (ImageButton) findViewById(R.id.addImage);
+		imageDate = (ImageButton) findViewById(R.id.imageDate);
+		textDate = (TextView) findViewById(R.id.textDate);
+		mYear = c.get(Calendar.YEAR);
+		mMonth = c.get(Calendar.MONTH);
+		mDay = c.get(Calendar.DAY_OF_MONTH);
+		textDate.setText(mDay + "/" + (mMonth + 1) + "/" + mYear);
 	}
 
 	public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) {
@@ -305,5 +345,13 @@ public class NoteActivity extends Activity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 }

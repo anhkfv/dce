@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/addimg" />
+                android:background="@android:drawable/ic_input_add" />
 
             <EditText
                 android:id="@+id/editText1"
@@ -50,13 +50,31 @@
                 android:id="@+id/editText2"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_marginTop="20dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="20dp"
                 android:layout_weight="0.93"
                 android:background="@drawable/roundcorner"
                 android:ems="10"
                 android:hint="Nội dung"
                 android:textColor="#008000" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.90"
+                    android:hint="Ngày ghi chú" />
+
+                <ImageButton
+                    android:id="@+id/imageDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/ic_menu_add" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
@@ -69,11 +87,10 @@
             android:id="@+id/button1"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_gravity="center"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="20dp"
-            android:layout_gravity="center"
-            android:src="@drawable/save" />
-
+            android:background="@android:drawable/ic_menu_save" />
     </LinearLayout>
 
 </LinearLayout>
