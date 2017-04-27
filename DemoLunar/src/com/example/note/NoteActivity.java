@@ -15,6 +15,7 @@ import com.example.sqlite_note.DataNoteHandler;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -116,17 +117,17 @@ public class NoteActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				DatePickerDialog datePickerDialog = new DatePickerDialog(NoteActivity.this,
-						new DatePickerDialog.OnDateSetListener() {
+						android.R.style.Theme_Holo_Light_Dialog, new DatePickerDialog.OnDateSetListener() {
 
-					@Override
-					public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+							@Override
+							public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-						textDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-						mYear = year;
-						mMonth = monthOfYear;
-						mDay = dayOfMonth;
-					}
-				}, mYear, mMonth, mDay);
+								textDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+								mYear = year;
+								mMonth = monthOfYear;
+								mDay = dayOfMonth;
+							}
+						}, mYear, mMonth, mDay);
 				datePickerDialog.show();
 			}
 		});

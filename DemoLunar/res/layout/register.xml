@@ -34,7 +34,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
-                android:text="Register"
+                android:text="Đăng ký"
                 android:textSize="30dp"
                 android:textStyle="bold"
                 android:typeface="monospace" />
@@ -48,7 +48,7 @@
                 android:layout_marginTop="25dp"
                 android:background="@drawable/register_uname"
                 android:gravity="center"
-                android:hint="Username"
+                android:hint="Tên đăng ký"
                 android:inputType="text"
                 android:textColor="#000000"
                 android:textStyle="bold" />
@@ -62,7 +62,7 @@
                 android:layout_marginTop="25dp"
                 android:background="@drawable/register_password"
                 android:gravity="center"
-                android:hint="Password"
+                android:hint="mật khẩu"
                 android:inputType="textPassword"
                 android:textColor="#000000"
                 android:textStyle="bold" />
@@ -76,7 +76,7 @@
                 android:layout_marginTop="25dp"
                 android:background="@drawable/register_cnfpassword"
                 android:gravity="center"
-                android:hint="Confirm Password"
+                android:hint="nhập lại mật khẩu"
                 android:inputType="textPassword"
                 android:textColor="#000000"
                 android:textStyle="bold" />
@@ -89,7 +89,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="25dp"
                 android:background="@drawable/register_button"
-                android:text="REGISTER"
+                android:text="Đăng ký"
                 android:textColor="#ffffff"
                 android:textSize="20dp" />
 
@@ -100,7 +100,7 @@
                 android:layout_below="@+id/register_button"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
-                android:text="Memeber Login?"
+                android:text="Đăng nhập ?"
                 android:textSize="15dp"
                 android:textStyle="bold"
                 android:typeface="monospace" />
