@@ -446,7 +446,7 @@ public class Lunar implements Serializable {
 
 	public static int nhiThapBatTu(DayMonthYear dmy) {
 
-		return (int) daysBetween2Dates(new DayMonthYear(1, 1, 1975), dmy) % 28;
+		return (int) daysBetween2Dates(new DayMonthYear(13, 12, 1899), dmy) % 28;
 
 	}
 
