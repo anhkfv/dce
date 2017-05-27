@@ -1,7 +1,10 @@
 package com.example.demolunar;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -10,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.example.note.Note;
+import com.example.note.adapter.ListNoteAdapter;
 import com.example.server.DataResult;
 import com.example.server.SendData;
 import com.example.sqlite_note.DataNoteHandler;
@@ -24,23 +28,25 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
+import processcommon.CheckNetwork;
 import processcommon.TransparentProgressDialog;
 
 public class SyncDataServer extends Activity {
 	private ImageButton getInfo, sendData;
-//	private ProgressDialog pd;
+	ListView lv;
+	private ArrayList<Note> mang;
 	private TransparentProgressDialog pd;
-	private TextView tv;
 	private DataNoteHandler hander = new DataNoteHandler(this);
 	private List<Note> notes = new ArrayList<>();
 	private String id, password;
-	private static String URL_SEND = "http://192.168.1.78:8080/Note/Demo/login/insert";
-	private static String URL_GET = "http://192.168.1.78:8080/Note/Demo/login/get";
+	private static String URL_SEND = CheckNetwork.localhost + "/Note/Demo/login/insert";
+	private static String URL_GET = CheckNetwork.localhost + "/Note/Demo/login/get";
 	private static String FIND_ALL = "SELECT*FROM Note";
-	private static String FIND_WITH_ID = "SELECT*FROM Note  WHERE id = ";
-
+	static final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+	// private static String FIND_WITH_ID = "SELECT*FROM Note WHERE id = ";
+	private ListNoteAdapter adapter;
 	private final Lock lock = new ReentrantLock();
 	private Cursor note;
 
@@ -48,64 +54,69 @@ public class SyncDataServer extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.aync_data);
-		tv = (TextView) findViewById(R.id.textData);
+		lv = (ListView) findViewById(R.id.listViewAync);
 		sendData = (ImageButton) findViewById(R.id.sendData);
 		getInfo = (ImageButton) findViewById(R.id.getInfo);
-
+		displayData();
 		SharedPreferences pre = getSharedPreferences("login", MODE_PRIVATE);
 		id = pre.getString("id", "");
 		password = pre.getString("password", "");
 		note = hander.getData(FIND_ALL);
 		while (note.moveToNext()) {
 			notes.add(new Note(note.getString(1), note.getString(2), note.getString(3), note.getString(4),
-					note.getInt(0)));
+					note.getLong(0)));
 		}
 		sendData.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				pd = new TransparentProgressDialog(SyncDataServer.this, R.drawable.spinner);
-				pd.show();
-				new AsyncTask<Void, Void, Void>() {
+				if (CheckNetwork.checkNetwork(SyncDataServer.this)) {
+					pd = new TransparentProgressDialog(SyncDataServer.this, R.drawable.spinner);
+					pd.show();
+					new AsyncTask<Void, Void, String>() {
 
-					@Override
-					protected Void doInBackground(Void... params) {
-						sendData.setEnabled(false);
-						JSONObject jsonObject = new JSONObject();
+						@Override
+						protected String doInBackground(Void... params) {
+							JSONObject jsonObject = new JSONObject();
 
-						String data = "";
-						try {
-							jsonObject.put("id", id.toString());
-							jsonObject.put("password", password.toString());
-							String json = new Gson().toJson(notes);
-							JSONArray jsonArray = new JSONArray(json);
-							jsonObject.accumulate("notes", jsonArray);
-							lock.lock();
-							data = SendData.sendJson(URL_SEND, jsonObject.toString());
-							lock.unlock();
+							String data = "";
+							try {
+								jsonObject.put("id", id.toString());
+								jsonObject.put("password", password.toString());
+								String json = new Gson().toJson(notes);
+								JSONArray jsonArray = new JSONArray(json);
+								jsonObject.accumulate("notes", jsonArray);
+								lock.lock();
+								data = SendData.sendJson(URL_SEND, jsonObject.toString());
+								lock.unlock();
+								pd.hide();
+								pd.dismiss();
+							} catch (Exception ex) {
+
+							}
+
+							return data;
+						}
+
+						@Override
+						protected void onPostExecute(String data) {
+							super.onPostExecute(data);
 							pd.hide();
 							pd.dismiss();
-						} catch (Exception ex) {
-
+							if (!data.equals("")) {
+								DataResult result = new DataResult();
+								result = new Gson().fromJson(data, DataResult.class);
+								Toast.makeText(SyncDataServer.this, result.getDetail(), Toast.LENGTH_LONG).show();
+								sendData.setEnabled(true);
+							}
+							onResume();
 						}
-						if (!data.equals("")) {
-							DataResult result = new DataResult();
-							result = new Gson().fromJson(data, DataResult.class);
-							Toast.makeText(SyncDataServer.this, result.getDetail(), Toast.LENGTH_LONG).show();
-							sendData.setEnabled(true);
-						}
-						return null;
-					}
 
-					@Override
-					protected void onPostExecute(Void result) {
-						super.onPostExecute(result);
-						pd.hide();
-						pd.dismiss();
-					}
+					}.execute();
 
-				}.execute();
-
+				} else {
+					CheckNetwork.noNetwork(SyncDataServer.this);
+				}
 			}
 		});
 
@@ -113,54 +124,88 @@ public class SyncDataServer extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				pd = new TransparentProgressDialog(SyncDataServer.this, R.drawable.spinner);
-				pd.show();
-				new AsyncTask<Void, Void, Void>() {
+				if (CheckNetwork.checkNetwork(SyncDataServer.this)) {
+					pd = new TransparentProgressDialog(SyncDataServer.this, R.drawable.spinner);
+					pd.show();
+					new AsyncTask<Void, Void, String>() {
 
-					@Override
-					protected Void doInBackground(Void... params) {
-						getInfo.setEnabled(false);
-						JSONObject jsonObject = new JSONObject();
-						String data = "";
-						try {
-							jsonObject.put("id", id.toString());
-							jsonObject.put("password", password.toString());
-							lock.lock();
-							data = SendData.sendJson(URL_GET, jsonObject.toString());
-							lock.unlock();
+						@Override
+						protected String doInBackground(Void... params) {
+							JSONObject jsonObject = new JSONObject();
+							String data = "";
+							try {
+								jsonObject.put("id", id.toString());
+								jsonObject.put("password", password.toString());
+								lock.lock();
+								data = SendData.sendJson(URL_GET, jsonObject.toString());
+								lock.unlock();
 
-						} catch (Exception ex) {
-							System.out.print(ex.getMessage());
-						}
-						if (!data.equals("")) {
-							Type founderListType = new TypeToken<ArrayList<Note>>() {
-							}.getType();
-							List<Note> result = new Gson().fromJson(data, founderListType);
-							Toast.makeText(SyncDataServer.this, "kt: " + result.size(), Toast.LENGTH_LONG).show();
-							for (Note note : notes) {
-								Cursor cursor = hander.getData(FIND_WITH_ID + note.id);
-								if (cursor != null) {
-									hander.updateNote(note.nameNote, note.detailNote, note.imageNote, note.date,
-											note.id);
-								} else {
-									hander.inserNote(note.nameNote, note.detailNote, note.imageNote, note.date);
-								}
+							} catch (Exception ex) {
+								System.out.print(ex.getMessage());
 							}
-							getInfo.setEnabled(true);
+							return data;
 						}
-						return null;
-					}
 
-					@Override
-					protected void onPostExecute(Void result) {
-						super.onPostExecute(result);
-						pd.hide();
-						pd.dismiss();
-					}
+						@Override
+						protected void onPostExecute(String data) {
+							super.onPostExecute(data);
+							// onResume();
+							pd.hide();
+							pd.dismiss();
+							if (!data.equals("")) {
+								Type founderListType = new TypeToken<ArrayList<Note>>() {
+								}.getType();
+								List<Note> result = new Gson().fromJson(data, founderListType);
+								Toast.makeText(SyncDataServer.this, "kt: " + result.size(), Toast.LENGTH_LONG).show();
+								try {
+									for (Note note : result) {
+										Note cursor = hander.getNote(String.valueOf(note.id));
+										if (cursor != null) {
+											hander.updateContact(note.nameNote, note.detailNote, note.imageNote,
+													df.parse(note.date), note.id);
+										} else {
+											hander.inserta(note.id, note.nameNote, note.detailNote, note.imageNote,
+													df.parse(note.date));
+										}
+									}
+								} catch (Exception ex) {
 
-				}.execute();
+								}
+								onResume();
+								getInfo.setEnabled(true);
+							}
+						}
 
+					}.execute();
+
+				} else {
+					CheckNetwork.noNetwork(SyncDataServer.this);
+				}
 			}
 		});
+	}
+
+	@Override
+	protected void onResume() {
+		displayData();
+		super.onResume();
+	}
+
+	private void displayData() {
+		mang = new ArrayList<Note>();
+		Cursor note = hander.getData("SELECT*FROM Note");
+		while (note.moveToNext()) {
+			mang.add(new Note(note.getString(1), note.getString(2), note.getString(3), note.getString(4),
+					note.getLong(0)));
+		}
+		Collections.sort(mang, new Comparator<Note>() {
+
+			@Override
+			public int compare(Note lhs, Note rhs) {
+				return lhs.getDate().compareTo(rhs.getDate());
+			}
+		});
+		adapter = new ListNoteAdapter(getApplicationContext(), R.layout.custom_activity_note, mang);
+		lv.setAdapter(adapter);
 	}
 }

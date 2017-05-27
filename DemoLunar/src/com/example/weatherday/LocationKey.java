@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 public class LocationKey {
-	private static String _url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=x4NmQoNwh7mp0AFE2oWUD5V0pI8ZnbWo&q=";
+	private static String _url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=YJLHdPEDXZ3pcfL8pZxuoeGzgBXKOCef&q=";
 
 	private String locationKey;
 	private String regionName;

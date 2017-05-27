@@ -4,31 +4,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import com.example.demolunar.R;
-import com.example.demolunar.SyncDataServer;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import processcommon.TransparentProgressDialog;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import processcommon.CheckNetwork;
+import processcommon.TransparentProgressDialog;
 
 public class MainActivity extends Activity {
 
 	Handler mHandler = new Handler();
 	private ArrayList<WeatherEntry> _forecast = null;
 	WeatherCustomAdapter userAdapter;
-	//private ProgressDialog pd;
+	// private ProgressDialog pd;
 	private TransparentProgressDialog pd;
 	Thread t;
 	ListView lstForecast;
@@ -44,19 +39,12 @@ public class MainActivity extends Activity {
 	}
 
 	public void loadData() {
-
-		ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-		NetworkInfo mMobileInternet = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
-		if (mWifi.isConnected()||mMobileInternet.isConnected()) {
+		if (CheckNetwork.checkNetwork(MainActivity.this)) {
 			pd = new TransparentProgressDialog(MainActivity.this, R.drawable.spinner);
-		    pd.show();
-			// pd = ProgressDialog.show(this, "Thời tiết 5 ngày", "Đang tải dữ liệu..!", true);
-			 getWUndergroundWeather();
-		} else if (!mMobileInternet.isConnected()||mWifi.isConnected()) {
-			TextView txtZipCode = (TextView) findViewById(R.id.txtRegionCode);
-			txtZipCode.setText("Không thể kết nối mạng");
+			pd.show();
+			getWUndergroundWeather();
+		} else {
+			CheckNetwork.noNetwork(MainActivity.this);
 			finish();
 		}
 	}
@@ -91,14 +79,14 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent it = new Intent(MainActivity.this, InformationWeatherByDay.class);
-				Log.d("nhiet do ngay:",""+_forecast.get(position).getTempHight() );
-				InformationDto dto=new InformationDto(_forecast.get(position));
+				Log.d("nhiet do ngay:", "" + _forecast.get(position).getTempHight());
+				InformationDto dto = new InformationDto(_forecast.get(position));
 				Bundle bundle = new Bundle();
 				bundle.putSerializable("entry", dto);
 				it.putExtras(bundle);
 				startActivity(it);
 			}
-			
+
 		});
 		pd.hide();
 		pd.dismiss();
@@ -107,7 +95,7 @@ public class MainActivity extends Activity {
 	public void getWUndergroundWeather() {
 		Thread t = new Thread() {
 			public void run() {
-				Weather forecast = new Weather(trans.getKeyLocation(),trans.getIcon());
+				Weather forecast = new Weather(trans.getKeyLocation(), trans.getIcon());
 				try {
 					if (forecast.getForecast().size() != 0) {
 						forecast.getForecast().clear();

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/register_main"
+    android:background="@drawable/nentt"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true" >
 
@@ -50,6 +50,7 @@
                 android:gravity="center"
                 android:hint="Tên đăng ký"
                 android:inputType="text"
+                android:maxLength="64"
                 android:textColor="#000000"
                 android:textStyle="bold" />
 
@@ -64,6 +65,7 @@
                 android:gravity="center"
                 android:hint="mật khẩu"
                 android:inputType="textPassword"
+                android:maxLength="64"
                 android:textColor="#000000"
                 android:textStyle="bold" />
 
@@ -78,6 +80,7 @@
                 android:gravity="center"
                 android:hint="nhập lại mật khẩu"
                 android:inputType="textPassword"
+                android:maxLength="64"
                 android:textColor="#000000"
                 android:textStyle="bold" />
 
@@ -92,18 +95,6 @@
                 android:text="Đăng ký"
                 android:textColor="#ffffff"
                 android:textSize="20dp" />
-
-            <TextView
-                android:id="@+id/member_login_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/register_button"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:text="Đăng nhập ?"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                android:typeface="monospace" />
         </RelativeLayout>
     </ScrollView>
 

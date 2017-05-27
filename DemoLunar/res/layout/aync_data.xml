@@ -5,30 +5,31 @@
     android:gravity="center"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textData"
-        android:layout_width="wrap_content"
+    <ListView
+        android:id="@+id/listViewAync"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_weight="0.9" >
+    </ListView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="0.1" 
         android:gravity="center" >
 
         <ImageButton
             android:id="@+id/sendData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon02" />
+            android:layout_marginRight="20px"
+            android:src="@drawable/upload_img" />
 
         <ImageButton
             android:id="@+id/getInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/circle_red" />
-
-
+            android:src="@drawable/download_img" />
     </LinearLayout>
 
 </LinearLayout>

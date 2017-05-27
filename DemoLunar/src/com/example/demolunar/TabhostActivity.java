@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
+@SuppressWarnings({ "unused", "deprecation","rawtypes"})
 public class TabhostActivity extends TabActivity {
 	private TabHost mHost;
 	protected static final int MSG_WHAT_NEW_VERSION = 0;
@@ -19,7 +20,6 @@ public class TabhostActivity extends TabActivity {
 	private int FOOTER_HEIGHT;
 	private TabSpec[] tabspecs = { null, null, null, null };
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 

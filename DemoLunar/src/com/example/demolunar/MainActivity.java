@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
 
 					Intent it = null;
 					it = new Intent(MainActivity.this, GuideActivity.class);
-					it.putExtra("from", "welcom");
+					it.putExtra("from", "welcome");
 					
 					MainActivity.this.startActivity(it);
 					MainActivity.this.finish();

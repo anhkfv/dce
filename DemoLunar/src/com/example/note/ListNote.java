@@ -3,14 +3,15 @@ package com.example.note;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
+import java.util.List;
 
 import com.example.date.DayMonthYear;
 import com.example.demolunar.R;
 import com.example.note.adapter.ListNoteAdapter;
+import com.example.print.NoteDto;
+import com.example.print.PrintNote;
 import com.example.sqlite_note.DataNoteHandler;
 
 import android.app.Activity;
@@ -27,8 +28,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
-
+/**
+ *  author thanhnx
+ */
 public class ListNote extends Activity implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private ListView lv;
 	private ArrayList<Note> mang;
 	private int tmp;
@@ -37,7 +41,7 @@ public class ListNote extends Activity implements Serializable {
 	private DayMonthYear dmyt;
 	private DataNoteHandler dbb = new DataNoteHandler(this);
 	static final String tempPath = "print.xlsx";
-	static final String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/printNote.xlsx";
+	static final String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ghichúlịchviệt.xlsx";
 	static final SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy");
 
 	@Override
@@ -114,18 +118,17 @@ public class ListNote extends Activity implements Serializable {
 
 			@Override
 			public void onClick(View v) {
-				// if(mang.size()!=0){
-				// PrintNote print=new PrintNote(ListNote.this,tempPath);
-				// List<NoteDto>dtos=new ArrayList<>();
-				// for(Note note :mang){
-				// NoteDto dto=new NoteDto();
-				// dtos.add(dto.convert(note));
-				// }
-				// print.printNote(savePath, dtos);
-				// }
-				// else{
-				//
-				// }
+				if (mang.size() != 0) {
+					PrintNote print = new PrintNote(ListNote.this, tempPath);
+					List<NoteDto> dtos = new ArrayList<>();
+					for (Note note : mang) {
+						NoteDto dto = new NoteDto();
+						dtos.add(dto.convert(note));
+					}
+					print.printNote(savePath, dtos);
+				} else {
+
+				}
 			}
 		});
 	}
@@ -137,19 +140,11 @@ public class ListNote extends Activity implements Serializable {
 	}
 
 	private void displayData() {
-//		Calendar cal = Calendar.getInstance();
-//		cal.set(Calendar.DATE, dmyt.getDay());
-//		cal.set(Calendar.MONTH, dmyt.getMonth() - 1);
-//		cal.set(Calendar.YEAR, dmyt.getYear());
-//		Date dat = cal.getTime();
-//		String temp = ft.format(dat);
 		mang = new ArrayList<Note>();
 		Cursor note = dbb.getData("SELECT*FROM Note");
 		while (note.moveToNext()) {
-			// if (temp.equals(note.getString(4))) {
 			mang.add(new Note(note.getString(1), note.getString(2), note.getString(3), note.getString(4),
-					note.getInt(0)));
-			// }
+					note.getLong(0)));
 		}
 		Collections.sort(mang, new Comparator<Note>() {
 

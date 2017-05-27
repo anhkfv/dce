@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.example.note.Note;
+import com.example.sqlite_truc.Contact;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -30,6 +31,7 @@ public class DataNoteHandler extends SQLiteOpenHelper {
 	private static final String KEY_PH_NO = "detailNote";
 	private static final String KEY_IM = "imageNote";
 	private static final String KEY_DATE = "dateNote";
+	SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy");
 
 	public DataNoteHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,9 +40,9 @@ public class DataNoteHandler extends SQLiteOpenHelper {
 	// Creating Tables
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "(" + KEY_ID
-				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " VARCHAR," + KEY_PH_NO + " VARCHAR," + KEY_IM
-				+ " VARCHAR," + KEY_DATE + " DATE" + ")";
+		String CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_CONTACTS + "(" + KEY_ID
+				+ " REAL PRIMARY KEY ," + KEY_NAME + " VARCHAR," + KEY_PH_NO + " VARCHAR," + KEY_IM + " VARCHAR,"
+				+ KEY_DATE + " DATE" + ")";
 		db.execSQL(CREATE_CONTACTS_TABLE);
 	}
 
@@ -63,48 +65,51 @@ public class DataNoteHandler extends SQLiteOpenHelper {
 		return db.rawQuery(sql, null);
 	}
 
-	public void inserta(String nameNote, String detailNote, String hinh, Date date) {
+	public Note getNote(String id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(TABLE_CONTACTS, new String[] { KEY_NAME, KEY_PH_NO, KEY_IM, KEY_DATE, KEY_ID },
+				KEY_ID + "=?", new String[] { id }, null, null, null, null);
+		if (cursor != null) {
+			if (cursor.moveToFirst()) {
+
+				Note note = new Note(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),
+						Long.parseLong(cursor.getString(4)));
+				return note;
+			}
+		}
+		return null;
+		// return contact
+
+	}
+
+	public void inserta(long id, String nameNote, String detailNote, String hinh, Date date) {
 		SQLiteDatabase db = getWritableDatabase();
-		String sql = "INSERT INTO Note VALUES(null,?,?,?,?)";
+		String sql = "INSERT INTO Note VALUES(?,?,?,?,?)";
 		SQLiteStatement statement = db.compileStatement(sql);
 		statement.clearBindings();
-		statement.bindString(1, nameNote);
-		statement.bindString(2, detailNote);
-		statement.bindString(3, hinh);
-		SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy");
-		statement.bindString(4, ft.format(date));
+		statement.bindLong(1, id);
+		statement.bindString(2, nameNote == null ? "" : nameNote);
+		statement.bindString(3, detailNote == null ? "" : detailNote);
+		statement.bindString(4, hinh);
+		statement.bindString(5, ft.format(date));
 		statement.executeInsert();
 	}
 
-	public void inserNote(String nameNote, String detailNote, String hinh, String date) {
+	public void updateContact(String nameNote, String detailNote, String hinh, Date date, long id) {
+		if (detailNote == null)
+			detailNote = "";
+		if (nameNote == null)
+			nameNote = "";
 		SQLiteDatabase db = getWritableDatabase();
-		String sql = "INSERT INTO Note VALUES(null,?,?,?,?)";
+		String sql = " UPDATE Note SET nameNote = '" + nameNote + "' , detailNote =' " + detailNote + "' ,imageNote = '"
+				+ hinh + "' " + " , dateNote = '" + ft.format(date) + "' WHERE " + KEY_ID + " = " + id;
+		Log.d("update sql= ", "" + sql);
 		SQLiteStatement statement = db.compileStatement(sql);
-		statement.clearBindings();
-		statement.bindString(1, nameNote);
-		statement.bindString(2, detailNote);
-		statement.bindString(3, hinh);
-		statement.bindString(4, date);
-		statement.executeInsert();
-	}
-	
-	public void updateContact(String nameNote, String detailNote, String hinh, Date date,int id) {
-		SQLiteDatabase db = getWritableDatabase();
-		SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy");
-		String sql = " UPDATE Note SET nameNote = '"+nameNote+"' , detailNote =' "+detailNote+"' ,imageNote = '"+hinh+"' "+" , dateNote = '"+ ft.format(date)+"' WHERE " + KEY_ID + " = "+id;
-		Log.d("update sql= ",""+sql);
-		SQLiteStatement statement = db.compileStatement(sql);
-		Log.d("update id= ",""+id);
+		Log.d("update id= ", "" + id);
 		statement.executeUpdateDelete();
 	}
-	public void updateNote(String nameNote, String detailNote, String hinh, String date,int id) {
-		SQLiteDatabase db = getWritableDatabase();
-		String sql = " UPDATE Note SET nameNote = '"+nameNote+"' , detailNote =' "+detailNote+"' ,imageNote = '"+hinh+"' "+" , dateNote = '"+ date +"' WHERE " + KEY_ID + " = "+id;
-		Log.d("update sql= ",""+sql);
-		SQLiteStatement statement = db.compileStatement(sql);
-		Log.d("update id= ",""+id);
-		statement.executeUpdateDelete();
-	}
+
 	public void deleteContact(Note contact) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.delete(TABLE_CONTACTS, KEY_ID + " = ?", new String[] { String.valueOf(contact.id) });

@@ -54,7 +54,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import fragment.FragmentDay.IGetItem;
-
+@SuppressWarnings("deprecation")
 public class LunarActivity extends FragmentActivity implements IGetItem {
 	Handler handler;
 	ViewPager viewPager;
@@ -103,10 +103,6 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 				Display display = getWindowManager().getDefaultDisplay();
 				Point size = new Point();
 				display.getSize(size);
-//				Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(mangNotet.get(0).imageNote), size.x,
-//						size.y, true);
-//				BitmapDrawable background = new BitmapDrawable(bmp);
-//				linearLayout.setBackgroundDrawable(background);
 				Bitmap bmp = decodeSampledBitmapFromUri(mangNotet.get(0).imageNote, 500, 500);
 				BitmapDrawable background = new BitmapDrawable(bmp);
 				linearLayout.setBackgroundDrawable(background);
@@ -244,7 +240,6 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 		handler.postDelayed(r, 1000);
 	}
 
-	@SuppressWarnings("deprecation")
 	public void setDay(DayMonthYear dmy) {
 
 		adapter = new FragmentDayAdapter(getSupportFragmentManager(), dmy, getApplicationContext());
@@ -468,7 +463,6 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 	}
 
 	private List<Note> displayData(DayMonthYear dmytt) {
-		String date;
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.DATE, dmytt.getDay());
 		cal.set(Calendar.MONTH, dmytt.getMonth() - 1);
@@ -501,17 +495,6 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 		if (mangNotet.size() == 0) {
 			setBackground(dmyCurrent);
 		} else {
-//			// Bitmap bmp =
-//			// decodeSampledBitmapFromUri(mangNotet.get(0).imageNote, 500, 500);
-//			Display display = getWindowManager().getDefaultDisplay();
-//			Point size = new Point();
-//			display.getSize(size);
-////			Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(mangNotet.get(0).imageNote), size.x, size.y,
-////					true);
-//			Bitmap bmp1 = scaleCenterCrop(BitmapFactory.decodeFile(mangNotet.get(0).imageNote),size.x,size.y);
-//			BitmapDrawable background = new BitmapDrawable(bmp1);
-//			linearLayout.setBackgroundDrawable(background);
-			
 			Bitmap bmp = decodeSampledBitmapFromUri(mangNotet.get(0).imageNote, 500, 500);
 			BitmapDrawable background = new BitmapDrawable(bmp);
 			linearLayout.setBackgroundDrawable(background);

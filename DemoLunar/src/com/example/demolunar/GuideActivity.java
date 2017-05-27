@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
+@SuppressWarnings("unused")
 public class GuideActivity extends Activity {
 	private Intent intent;
 	String filename = "data_login";

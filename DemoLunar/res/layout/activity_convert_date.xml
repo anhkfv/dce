@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/nent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/nentt"
     android:orientation="vertical"
     android:theme="@android:style/Theme.Holo.Light" >
 
@@ -10,16 +10,18 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Lịch Dương "
         android:layout_gravity="center"
-        android:layout_marginTop="5px"
-        android:textColor="#02E6A1"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_marginTop="7px"
+        android:layout_weight="0.1"
+        android:text="Lịch Dương "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#02E6A1" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20px"
+        android:layout_marginTop="10px"
+        android:layout_weight="0.35"
         android:gravity="center" >
 
         <NumberPicker
@@ -45,18 +47,21 @@
 
     <TextView
         android:id="@+id/textView2"
-         android:layout_width="wrap_content"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Lịch Âm "
         android:layout_gravity="center"
-        android:layout_marginTop="20px"
-        android:textColor="#02E6A1"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:layout_marginTop="10px"
+        android:layout_weight="0.1"
+        android:text="Lịch Âm "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#02E6A1" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5px"
         android:layout_marginTop="5px"
+        android:layout_weight="0.35"
         android:gravity="center" >
 
         <NumberPicker
@@ -84,8 +89,10 @@
         android:id="@+id/imageDetail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20px"
         android:layout_gravity="center"
+        android:layout_marginTop="5px"
+        android:layout_weight="0.1"
+        android:layout_marginBottom="10px"
         android:background="@drawable/search" />
 
 </LinearLayout>

@@ -107,7 +107,7 @@ public class FragmentDay extends Fragment {
 		while (note.moveToNext()) {
 			if (temp.equals(note.getString(4))) {
 				mang.add(new Note(note.getString(1), note.getString(2), note.getString(3), note.getString(4),
-						note.getInt(0)));
+						note.getLong(0)));
 			}
 		}
 		return mang;

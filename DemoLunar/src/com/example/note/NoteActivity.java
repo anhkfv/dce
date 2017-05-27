@@ -15,7 +15,6 @@ import com.example.sqlite_note.DataNoteHandler;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -71,7 +70,6 @@ public class NoteActivity extends Activity {
 	String tempNameNote;
 	final Calendar c = Calendar.getInstance();
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -163,7 +161,7 @@ public class NoteActivity extends Activity {
 						if (getPath() == null) {
 							setPath(PATH_IMAGE + "/ars3.jpg");
 						}
-						db.inserta(edtTen.getText().toString(), edtGia.getText().toString(), getPath(), d);
+						db.inserta(System.currentTimeMillis(),edtTen.getText().toString(), edtGia.getText().toString(), getPath(), d);
 						Toast.makeText(NoteActivity.this, "luu thanh cong", Toast.LENGTH_LONG).show();
 						finish();
 					}

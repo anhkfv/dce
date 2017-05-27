@@ -23,7 +23,7 @@ public class Weather {
 	private String icon;
 
 	public Weather(String key, String icon) {
-		_url = _url + key + "?apikey=x4NmQoNwh7mp0AFE2oWUD5V0pI8ZnbWo&language=vi-vn&details=true&metric=true";
+		_url = _url + key + "?apikey=YJLHdPEDXZ3pcfL8pZxuoeGzgBXKOCef&language=vi-vn&details=true&metric=true";
 		this.icon = icon;
 	}
 

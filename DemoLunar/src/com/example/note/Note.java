@@ -7,9 +7,9 @@ public class Note implements Serializable {
 	public String detailNote;
 	public String imageNote;
 	public String date;
-	public int id;
+	public long id;
 
-	public Note(String nameNote, String detailNote, String imageNote, String date,int id) {
+	public Note(String nameNote, String detailNote, String imageNote, String date,long id) {
 		super();
 		this.nameNote = nameNote;
 		this.detailNote = detailNote;
@@ -22,11 +22,11 @@ public class Note implements Serializable {
 		
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

@@ -19,7 +19,7 @@ public class WeatherDate {
 	private static String temp;
 
 	public WeatherDate(String key) {
-		this._url = _url + key + "?apikey=x4NmQoNwh7mp0AFE2oWUD5V0pI8ZnbWo&language=vi-vn&metric=true";
+		this._url = _url + key + "?apikey=YJLHdPEDXZ3pcfL8pZxuoeGzgBXKOCef&language=vi-vn&metric=true";
 	}
 
 	public void loadData() throws IOException {
