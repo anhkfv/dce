@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.demolunar.MainActivity" >
 
-   
+    <item
+        android:id="@+id/links"
+        android:title="Link Server"/>
+    <item
+        android:id="@+id/about"
+        android:title="About"/>
 
 </menu>

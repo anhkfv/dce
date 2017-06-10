@@ -10,18 +10,24 @@ import com.example.server.SendData;
 import com.google.gson.Gson;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import processcommon.CheckNetwork;
+import processcommon.CheckCommon;
 import processcommon.TransparentProgressDialog;
 
 public class LoginActivity extends Activity {
@@ -32,6 +38,8 @@ public class LoginActivity extends Activity {
 	// private ProgressDialog pd;
 	private TransparentProgressDialog pd;
 	private final Lock lock = new ReentrantLock();
+	private  AlertDialog  ad;
+	private static String URL_LOGIN = CheckCommon.localhost + "/Note/Demo/login/check";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +53,28 @@ public class LoginActivity extends Activity {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
+		SharedPreferences link = getSharedPreferences("linkServer", MODE_PRIVATE);
+		String linkTemp = link.getString("link", "");
+		if (!linkTemp.isEmpty()) {
+			URL_LOGIN = linkTemp + "/Note/Demo/login/check";
+		}
 		login.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if (CheckNetwork.checkNetwork(LoginActivity.this)) {
+				if (CheckCommon.checkNetwork(LoginActivity.this)) {
 					// pd = ProgressDialog.show(LoginActivity.this, "",
 					// "Register", true);
 					pd = new TransparentProgressDialog(LoginActivity.this, R.drawable.spinner);
 					pd.show();
+					SharedPreferences link = getSharedPreferences("linkServer", MODE_PRIVATE);
+					String linkTemp = link.getString("link", "");
+					if (!linkTemp.isEmpty()) {
+						URL_LOGIN = linkTemp + "/Note/Demo/login/check";
+					}
 					new AsyncTask<Void, Void, String>() {
 						@Override
 						protected String doInBackground(Void... params) {
-							String url = CheckNetwork.localhost+"/Note/Demo/login/check";
 							JSONObject jsonObject = new JSONObject();
 							try {
 								jsonObject.put("id", userName.getText().toString());
@@ -66,7 +83,7 @@ public class LoginActivity extends Activity {
 
 							}
 							lock.lock();
-							String  data = SendData.sendJson(url, jsonObject.toString());
+							String data = SendData.sendJson(URL_LOGIN, jsonObject.toString());
 							lock.unlock();
 							return data;
 						}
@@ -99,7 +116,7 @@ public class LoginActivity extends Activity {
 						}
 					}.execute();
 				} else {
-					CheckNetwork.noNetwork(LoginActivity.this);
+					CheckCommon.noNetwork(LoginActivity.this);
 					Intent it = new Intent(LoginActivity.this, SyncDataServer.class);
 					startActivity(it);
 				}
@@ -113,6 +130,61 @@ public class LoginActivity extends Activity {
 				startActivity(it);
 			}
 		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.links:
+			final AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
+			alert.setTitle("Link Server");
+			//ad = alert.show();
+			LayoutInflater inflater = LoginActivity.this.getLayoutInflater();
+			// this is what I did to added the layout to the alert dialog
+			View layout = inflater.inflate(R.layout.menu, null);
+			alert.setView(layout);
+			final EditText usernameInput = (EditText) layout.findViewById(R.id.editLinkServer);
+			SharedPreferences link = getSharedPreferences("linkServer", MODE_PRIVATE);
+			String linkTemp = link.getString("link", "");
+			if (linkTemp.isEmpty()) {
+				usernameInput.setText(CheckCommon.localhost);
+			}else{
+				usernameInput.setText(linkTemp);
+			}
+			final Button save= (Button) layout.findViewById(R.id.save);
+			final Button cancel= (Button) layout.findViewById(R.id.cancel);
+			save.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					SharedPreferences pre = getSharedPreferences("linkServer", MODE_PRIVATE);
+					SharedPreferences.Editor editor = pre.edit();
+					editor.putString("link", usernameInput.getText().toString());
+					editor.commit();
+					ad.cancel();
+				}
+			});
+			cancel.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					ad.cancel();
+				}
+			});
+			ad = alert.show();
+			//alert.show();
+			break;
+		case R.id.about:
+			break;
+		}
+		return true;
 	}
 
 }

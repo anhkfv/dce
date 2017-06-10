@@ -117,25 +117,15 @@ public class Lunar implements Serializable {
 
 	// tinh thoi diem soc
 	public static double newMoon(int k) {
-		double T = k / 1236.85; // Time in Julian centuries from 1900 January
-								// 0.5
+		double T = k / 1236.85; // Time in Julian centuries from 1900 January 0.5
 		double T2 = T * T;
 		double T3 = T2 * T;
 		double dr = PI / 180;
 		double Jd1 = 2415020.75933 + 29.53058868 * k + 0.0001178 * T2 - 0.000000155 * T3;
-		Jd1 = Jd1 + 0.00033 * Math.sin((166.56 + 132.87 * T - 0.009173 * T2) * dr); // Mean
-																					// new
-																					// moon
-		double M = 359.2242 + 29.10535608 * k - 0.0000333 * T2 - 0.00000347 * T3; // Sun's
-																					// mean
-																					// anomaly
-		double Mpr = 306.0253 + 385.81691806 * k + 0.0107306 * T2 + 0.00001236 * T3; // Moon's
-																						// mean
-																						// anomaly
-		double F = 21.2964 + 390.67050646 * k - 0.0016528 * T2 - 0.00000239 * T3; // Moon's
-																					// argument
-																					// of
-																					// latitude
+		Jd1 = Jd1 + 0.00033 * Math.sin((166.56 + 132.87 * T - 0.009173 * T2) * dr); // Mean new moon
+		double M = 359.2242 + 29.10535608 * k - 0.0000333 * T2 - 0.00000347 * T3; // Sun's mean anomaly
+		double Mpr = 306.0253 + 385.81691806 * k + 0.0107306 * T2 + 0.00001236 * T3; // Moon's mean anomaly
+		double F = 21.2964 + 390.67050646 * k - 0.0016528 * T2 - 0.00000239 * T3; // Moon's argumentof  latitude
 		double C1 = (0.1734 - 0.000393 * T) * Math.sin(M * dr) + 0.0021 * Math.sin(2 * dr * M);
 		C1 = C1 - 0.4068 * Math.sin(Mpr * dr) + 0.0161 * Math.sin(dr * 2 * Mpr);
 		C1 = C1 - 0.0004 * Math.sin(dr * 3 * Mpr);
@@ -156,16 +146,11 @@ public class Lunar implements Serializable {
 
 	// tinh vi tri mat troi luc 00:00 (dai diem tuy dau vao day julius)
 	public static double sunLongitude(double jdn) {
-		double T = (jdn - 2451545.0) / 36525; // Time in Julian centuries from
-												// 2000-01-01 12:00:00 GMT
+		double T = (jdn - 2451545.0) / 36525; // Time in Julian centuries from 2000-01-01 12:00:00 GMT
 		double T2 = T * T;
 		double dr = PI / 180; // degree to radian
-		double M = 357.52910 + 35999.05030 * T - 0.0001559 * T2 - 0.00000048 * T * T2; // mean
-																						// anomaly,
-																						// degree
-		double L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2; // mean
-																	// longitude,
-																	// degree
+		double M = 357.52910 + 35999.05030 * T - 0.0001559 * T2 - 0.00000048 * T * T2; // mean anomaly,degree
+		double L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2; // mean longitude, degree
 		double DL = (1.914600 - 0.004817 * T - 0.000014 * T2) * Math.sin(dr * M);
 		DL = DL + (0.019993 - 0.000101 * T) * Math.sin(dr * 2 * M) + 0.000290 * Math.sin(dr * 3 * M);
 		double L = L0 + DL; // true longitude, degree
@@ -173,18 +158,14 @@ public class Lunar implements Serializable {
 		L = L - PI * 2 * (INT(L / (PI * 2))); // Normalize to (0, 2*PI)
 		return L;
 	}
-
+//Tính tháng âm lịch chứa ngày Đông chí
 	public static DayMonthYear lunarMonth11(int Y) {
 		DayMonthYear dmy = new DayMonthYear(31, 12, Y);
-		double off = localToJD(dmy) - 2415021.076998695;
+		double off = localToJD(dmy) - 2415021.076998695;//13:51 GMT ngày 1/1/1900 (ngày Julius 2415021.076998695). sóc
 		int k = INT(off / 29.530588853);
 		double jd = newMoon(k);
 		dmy = localFromJD(jd);
-		double sunLong = sunLongitude(localToJD(dmy)); // sun
-														// longitude
-														// at
-														// local
-														// midnight
+		double sunLong = sunLongitude(localToJD(dmy)); // sun longitude at local midnight
 		if (sunLong > 3 * PI / 2) {
 			jd = newMoon(k - 1);
 		}

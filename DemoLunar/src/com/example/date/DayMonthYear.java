@@ -3,6 +3,7 @@ package com.example.date;
 import java.io.Serializable;
 
 public class DayMonthYear implements Serializable {
+	// day, month , year năm dương lịch , nm tháng âm lịch , leap tháng nhuận, full số ngày trong tháng âm lịch
 	private int day, month, year, nm, leap, full;
 
 	public DayMonthYear(int day, int month, int year, int nm, int leap) {

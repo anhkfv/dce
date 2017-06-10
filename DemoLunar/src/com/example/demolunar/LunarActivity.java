@@ -54,6 +54,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import fragment.FragmentDay.IGetItem;
+import processcommon.CheckCommon;
 @SuppressWarnings("deprecation")
 public class LunarActivity extends FragmentActivity implements IGetItem {
 	Handler handler;
@@ -347,23 +348,6 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 	}
 
 	public void loadData() {
-		// ConnectivityManager connManager = (ConnectivityManager)
-		// getSystemService(Context.CONNECTIVITY_SERVICE);
-		// NetworkInfo mWifi =
-		// connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-		// NetworkInfo mMobileInternet =
-		// connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-		//
-		// if (mWifi.isConnected()) {
-		// getWUndergroundWeather();
-		// } else if (!mMobileInternet.isConnected()) {
-		// Toast.makeText(LunarActivity.this, "Không kết nối mạng",
-		// Toast.LENGTH_LONG).show();
-		// imgBt.setEnabled(false);
-		//
-		// } else {
-		// getWUndergroundWeather();
-		// }
 		try {
 			if (ActivityCompat.checkSelfPermission(this, mPermission) != MockPackageManager.PERMISSION_GRANTED) {
 
@@ -380,10 +364,10 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 						
 						lock.lock();
 						int count = 0;
-						while (gps.location == null && count < 1000){
+						while (gps.location == null && count < 5){
 							location  = gps.getLocation();
 							try {
-								Thread.sleep(2000);
+								Thread.sleep(1000);
 								count ++;
 								Log.d("log dem ", ""+count);
 							} catch (InterruptedException e) {
@@ -399,15 +383,20 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 					@Override
 					protected void onPostExecute(Location result) {
 						// check if GPS enabled
-						if (gps.canGetLocation()) {
+						if (gps.canGetLocation()&&gps.getLatitude()!= 0.0) {
 
 							double latitude = gps.getLatitude();
 							double longitude = gps.getLongitude();
 							getWUndergroundWeather();
-							Toast.makeText(getApplicationContext(),
-									"Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+//							Toast.makeText(getApplicationContext(),
+//									"Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
 						} else {
-							gps.showSettingsAlert();
+							//gps.showSettingsAlert();
+							if(CheckCommon.checkNetwork(LunarActivity.this)){
+								getWUndergroundWeather();
+							}else{
+								
+							}
 						}
 						super.onPostExecute(result);
 					}
@@ -435,7 +424,11 @@ public class LunarActivity extends FragmentActivity implements IGetItem {
 				locationKey = new LocationKey();
 				try {
 					lock.lock();
+					if(gps.getLatitude()!= 0.0){
 					locationKey.loadData(gps.getLatitude(), gps.getLongitude());
+					}else{
+					locationKey.loadDataNoGPS();
+					}
 					lock.unlock();
 					if (locationKey != null) {
 						forecast = new WeatherDate(locationKey.getLocatioKey());

@@ -150,7 +150,7 @@ public class NoteActivity extends Activity {
 						}
 
 						db.updateContact(edtTen.getText().toString(), edtGia.getText().toString(), temp, d, note.id);
-						Toast.makeText(NoteActivity.this, "cap nhat thanh cong", Toast.LENGTH_LONG).show();
+						Toast.makeText(NoteActivity.this, "cập nhật thành công", Toast.LENGTH_LONG).show();
 						finish();
 					} else {
 						Calendar cal = Calendar.getInstance();
@@ -162,7 +162,7 @@ public class NoteActivity extends Activity {
 							setPath(PATH_IMAGE + "/ars3.jpg");
 						}
 						db.inserta(System.currentTimeMillis(),edtTen.getText().toString(), edtGia.getText().toString(), getPath(), d);
-						Toast.makeText(NoteActivity.this, "luu thanh cong", Toast.LENGTH_LONG).show();
+						Toast.makeText(NoteActivity.this, "lưu thành công", Toast.LENGTH_LONG).show();
 						finish();
 					}
 				} catch (Exception ex)
@@ -222,61 +222,6 @@ public class NoteActivity extends Activity {
 			Bitmap bm = decodeSampledBitmapFromUri(picturePath, 500, 500);
 			imgvHinh.setImageBitmap(bm);
 			// imageView.setOnTouchListener(new Touch());
-
-			imgvHinh.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					ImageView view = (ImageView) v;
-					System.out.println("matrix=" + savedMatrix.toString());
-					switch (event.getAction() & MotionEvent.ACTION_MASK) {
-					case MotionEvent.ACTION_DOWN:
-						savedMatrix.set(matrix);
-						startPoint.set(event.getX(), event.getY());
-						mode = DRAG;
-						break;
-					case MotionEvent.ACTION_POINTER_DOWN:
-						oldDist = spacing(event);
-						if (oldDist > 10f) {
-							savedMatrix.set(matrix);
-							midPoint(midPoint, event);
-							mode = ZOOM;
-						}
-						break;
-					case MotionEvent.ACTION_UP:
-					case MotionEvent.ACTION_POINTER_UP:
-						mode = NONE;
-						break;
-					case MotionEvent.ACTION_MOVE:
-						if (mode == DRAG) {
-							matrix.set(savedMatrix);
-							matrix.postTranslate(event.getX() - startPoint.x, event.getY() - startPoint.y);
-						} else if (mode == ZOOM) {
-							float newDist = spacing(event);
-							if (newDist > 10f) {
-								matrix.set(savedMatrix);
-								float scale = newDist / oldDist;
-								matrix.postScale(scale, scale, midPoint.x, midPoint.y);
-							}
-						}
-						break;
-					}
-					view.setImageMatrix(matrix);
-					return true;
-				}
-
-				@SuppressLint("FloatMath")
-				private float spacing(MotionEvent event) {
-					float x = event.getX(0) - event.getX(1);
-					float y = event.getY(0) - event.getY(1);
-					return (float) Math.sqrt(x * x + y * y);
-				}
-
-				private void midPoint(PointF point, MotionEvent event) {
-					float x = event.getX(0) + event.getX(1);
-					float y = event.getY(0) + event.getY(1);
-					point.set(x / 2, y / 2);
-				}
-			});
 		}
 	};
 

@@ -20,7 +20,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import processcommon.CheckNetwork;
+import processcommon.CheckCommon;
 import processcommon.TransparentProgressDialog;
 
 public class RegisterActivity extends Activity {
@@ -29,6 +29,7 @@ public class RegisterActivity extends Activity {
 	// private ProgressDialog pd;
 	private TransparentProgressDialog pd;
 	private final Lock lock = new ReentrantLock();
+	private String URL_REGISTER = CheckCommon.localhost + "/Note/Demo/login/login";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,19 +43,28 @@ public class RegisterActivity extends Activity {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
+		SharedPreferences link = getSharedPreferences("linkServer", MODE_PRIVATE);
+		String linkTemp = link.getString("link", "");
+		if (!linkTemp.isEmpty()) {
+			URL_REGISTER = linkTemp + "/Note/Demo/login/login";
+		}
 		register.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if (CheckNetwork.checkNetwork(RegisterActivity.this)) {
+				if (CheckCommon.checkNetwork(RegisterActivity.this)) {
 					if (password.getText().toString().equals(passwordConfim.getText().toString())) {
 						pd = new TransparentProgressDialog(RegisterActivity.this, R.drawable.spinner);
 						pd.show();
+						SharedPreferences link = getSharedPreferences("linkServer", MODE_PRIVATE);
+						String linkTemp = link.getString("link", "");
+						if (!linkTemp.isEmpty()) {
+							URL_REGISTER = linkTemp + "/Note/Demo/login/login";
+						}
 						new AsyncTask<Void, Void, String>() {
 
 							@Override
 							protected String doInBackground(Void... params) {
-								String url = CheckNetwork.localhost + "/Note/Demo/login/login";
 								JSONObject jsonObject = new JSONObject();
 								try {
 									jsonObject.put("id", userName.getText().toString());
@@ -63,7 +73,7 @@ public class RegisterActivity extends Activity {
 
 								}
 								lock.lock();
-								String data = SendData.sendJson(url, jsonObject.toString());
+								String data = SendData.sendJson(URL_REGISTER, jsonObject.toString());
 								lock.unlock();
 								return data;
 							}
@@ -99,7 +109,7 @@ public class RegisterActivity extends Activity {
 						Toast.makeText(RegisterActivity.this, "Mật khẩu không khớp ", Toast.LENGTH_LONG).show();
 					}
 				} else {
-					CheckNetwork.noNetwork(RegisterActivity.this);
+					CheckCommon.noNetwork(RegisterActivity.this);
 				}
 			}
 		});

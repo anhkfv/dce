@@ -15,7 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import processcommon.CheckNetwork;
+import processcommon.CheckCommon;
 import processcommon.TransparentProgressDialog;
 
 public class MainActivity extends Activity {
@@ -39,12 +39,12 @@ public class MainActivity extends Activity {
 	}
 
 	public void loadData() {
-		if (CheckNetwork.checkNetwork(MainActivity.this)) {
+		if (CheckCommon.checkNetwork(MainActivity.this)) {
 			pd = new TransparentProgressDialog(MainActivity.this, R.drawable.spinner);
 			pd.show();
 			getWUndergroundWeather();
 		} else {
-			CheckNetwork.noNetwork(MainActivity.this);
+			CheckCommon.noNetwork(MainActivity.this);
 			finish();
 		}
 	}

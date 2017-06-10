@@ -12,6 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.example.note.ListNote;
 import com.example.note.Note;
 import com.example.note.adapter.ListNoteAdapter;
 import com.example.server.DataResult;
@@ -21,16 +22,20 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
-import processcommon.CheckNetwork;
+import android.widget.AdapterView.OnItemLongClickListener;
+import processcommon.CheckCommon;
 import processcommon.TransparentProgressDialog;
 
 public class SyncDataServer extends Activity {
@@ -41,14 +46,16 @@ public class SyncDataServer extends Activity {
 	private DataNoteHandler hander = new DataNoteHandler(this);
 	private List<Note> notes = new ArrayList<>();
 	private String id, password;
-	private static String URL_SEND = CheckNetwork.localhost + "/Note/Demo/login/insert";
-	private static String URL_GET = CheckNetwork.localhost + "/Note/Demo/login/get";
+	private static String URL_SEND = CheckCommon.localhost + "/Note/Demo/login/insert";
+	private static String URL_GET = CheckCommon.localhost + "/Note/Demo/login/get";
 	private static String FIND_ALL = "SELECT*FROM Note";
 	static final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 	// private static String FIND_WITH_ID = "SELECT*FROM Note WHERE id = ";
 	private ListNoteAdapter adapter;
 	private final Lock lock = new ReentrantLock();
 	private Cursor note;
+	private int tmp;
+	private DataNoteHandler dbb = new DataNoteHandler(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,10 @@ public class SyncDataServer extends Activity {
 		getInfo = (ImageButton) findViewById(R.id.getInfo);
 		displayData();
 		SharedPreferences pre = getSharedPreferences("login", MODE_PRIVATE);
+		SharedPreferences link = getSharedPreferences("linkServer", MODE_PRIVATE);
+		String linkTemp = link.getString("link", "");
+		getLink();
+		Toast.makeText(SyncDataServer.this, linkTemp, Toast.LENGTH_LONG).show();
 		id = pre.getString("id", "");
 		password = pre.getString("password", "");
 		note = hander.getData(FIND_ALL);
@@ -66,11 +77,43 @@ public class SyncDataServer extends Activity {
 			notes.add(new Note(note.getString(1), note.getString(2), note.getString(3), note.getString(4),
 					note.getLong(0)));
 		}
+		lv.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				tmp = position;
+				AlertDialog.Builder b = new AlertDialog.Builder(SyncDataServer.this);
+
+				b.setMessage("Bạn có muốn xóa ?");
+				b.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dbb.deleteContact(mang.get(tmp));
+						displayData();
+					}
+				});
+				b.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+
+					@Override
+
+					public void onClick(DialogInterface dialog, int which)
+
+					{
+						dialog.cancel();
+					}
+
+				});
+
+				b.create().show();
+
+				return true;
+			}
+		});
 		sendData.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if (CheckNetwork.checkNetwork(SyncDataServer.this)) {
+				if (CheckCommon.checkNetwork(SyncDataServer.this)) {
 					pd = new TransparentProgressDialog(SyncDataServer.this, R.drawable.spinner);
 					pd.show();
 					new AsyncTask<Void, Void, String>() {
@@ -115,7 +158,7 @@ public class SyncDataServer extends Activity {
 					}.execute();
 
 				} else {
-					CheckNetwork.noNetwork(SyncDataServer.this);
+					CheckCommon.noNetwork(SyncDataServer.this);
 				}
 			}
 		});
@@ -124,7 +167,7 @@ public class SyncDataServer extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				if (CheckNetwork.checkNetwork(SyncDataServer.this)) {
+				if (CheckCommon.checkNetwork(SyncDataServer.this)) {
 					pd = new TransparentProgressDialog(SyncDataServer.this, R.drawable.spinner);
 					pd.show();
 					new AsyncTask<Void, Void, String>() {
@@ -179,7 +222,7 @@ public class SyncDataServer extends Activity {
 					}.execute();
 
 				} else {
-					CheckNetwork.noNetwork(SyncDataServer.this);
+					CheckCommon.noNetwork(SyncDataServer.this);
 				}
 			}
 		});
@@ -207,5 +250,14 @@ public class SyncDataServer extends Activity {
 		});
 		adapter = new ListNoteAdapter(getApplicationContext(), R.layout.custom_activity_note, mang);
 		lv.setAdapter(adapter);
+	}
+	private void getLink(){
+		SharedPreferences pre = getSharedPreferences("login", MODE_PRIVATE);
+		SharedPreferences link = getSharedPreferences("linkServer", MODE_PRIVATE);
+		String linkTemp = link.getString("link", "");
+		if (!linkTemp.isEmpty()) {
+			URL_SEND = linkTemp + "/Note/Demo/login/insert";
+			URL_GET = linkTemp + "/Note/Demo/login/get";
+		}
 	}
 }

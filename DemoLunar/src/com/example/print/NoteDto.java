@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.widget.ImageView;
+import processcommon.CheckCommon;
 
 public class NoteDto {
 	private String nameNote;
@@ -32,8 +33,13 @@ public class NoteDto {
 		dto.setDate(note.getDate());
 		dto.setNameNote(note.nameNote);
 		dto.setDetailNote(note.getDetailNote());
+		//byte[] image = new byte[1024];
+		if(CheckCommon.checkHasFile(note.getImageNote())){
 		Bitmap bm=decodeSampledBitmapFromUri(note.getImageNote(), 500, 500);
 		dto.setImageNote(imageView_To_Byte(bm));
+		}else{
+			dto.setImageNote(null);
+		}
 		return dto;
 	}
 	public byte[] imageView_To_Byte(Bitmap bmp) {
